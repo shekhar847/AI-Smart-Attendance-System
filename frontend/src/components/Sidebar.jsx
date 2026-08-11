@@ -9,7 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
@@ -33,6 +33,11 @@ const menuItems = [
     to: "/attendance",
   },
   {
+    title: "Cameras",
+    icon: <Camera size={20} />,
+    to: "/cameras",
+  },
+  {
     title: "Reports",
     icon: <BarChart3 size={20} />,
     to: "/reports",
@@ -45,12 +50,22 @@ const menuItems = [
 ];
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("admin");
+
+    navigate("/login", {
+      replace: true,
+    });
+  };
   return (
-    <aside className="flex h-screen w-72 flex-col border-r border-slate-200 bg-slate-50">
+    <aside className="fixed left-0 top-0 flex h-screen w-72 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
 
       {/* Logo */}
 
-      <div className="border-b border-slate-200 px-7 py-7">
+      <div className="border-b border-slate-200 dark:border-slate-800 px-7 py-7">
 
         <div className="flex items-center gap-4">
 
@@ -62,11 +77,11 @@ function Sidebar() {
 
           <div>
 
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-800">
+            <h1 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
               AI Attendance
             </h1>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Smart Admin Panel
             </p>
 
@@ -80,7 +95,7 @@ function Sidebar() {
 
       <nav className="flex-1 px-4 py-6">
 
-        <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-widest text-slate-400">
+        <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
           Main Menu
         </p>
 
@@ -101,7 +116,7 @@ function Sidebar() {
 
       {/* Bottom */}
 
-      <div className="border-t border-slate-200 p-5">
+      <div className="mt-auto border-t border-slate-200 dark:border-slate-800 p-5">
 
         <div className="mb-4 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-white shadow">
 
@@ -119,12 +134,12 @@ function Sidebar() {
 
         </div>
 
-        <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold text-red-500 transition-all duration-300 hover:bg-red-50">
-
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold text-red-500 dark:text-red-400 transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-950/40"
+        >
           <LogOut size={20} />
-
           Logout
-
         </button>
 
       </div>
@@ -138,10 +153,9 @@ function MenuItem({ icon, title, to }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `group flex items-center gap-4 rounded-2xl px-5 py-4 transition-all duration-300 ${
-          isActive
-            ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-xl"
-            : "text-slate-600 hover:bg-white hover:shadow-md"
+        `group flex items-center gap-4 rounded-2xl px-5 py-4 transition-all duration-300 ${isActive
+          ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-xl"
+          : "text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 hover:shadow-md"
         }`
       }
     >

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ai_attendance_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sql123
+      MYSQL_DATABASE: ai_attendance
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: ai_attendance_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=sql123
+      - DB_NAME=ai_attendance
+    depends_on:
+      - db
+    volumes:
+      - ./backend/uploads:/app/uploads
+
+  ai-service:
+    build: ./ai-service
+    container_name: ai_attendance_ai_service
+    restart: always
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    container_name: ai_attendance_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

@@ -7,6 +7,7 @@ import Teachers from "../pages/Teachers/Teachers";
 import Attendance from "../pages/Attendance/Attendance";
 import Reports from "../pages/Reports/Reports";
 import Settings from "../pages/Settings/Settings";
+import Cameras from "../pages/Cameras/Cameras";
 
 function AppRouter() {
   return (
@@ -18,6 +19,7 @@ function AppRouter() {
       <Route path="/attendance" element={<Attendance />} />
       <Route path="/reports" element={<Reports />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/cameras" element={<Cameras />} />
     </Routes>
   );
 }

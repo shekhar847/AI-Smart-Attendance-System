@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   Users,
   GraduationCap,
@@ -7,63 +9,111 @@ import {
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 
-import WelcomeBanner from "../../components/WelcomeBanner";
 import StatCard from "../../components/StatCard";
 import AttendanceChart from "../../components/AttendanceChart";
 import AttendanceSummary from "../../components/AttendanceSummary";
 import AttendanceTable from "../../components/AttendanceTable";
 import PageHeader from "../../components/PageHeader";
 
+import { getDashboard } from "../../api/dashboardApi";
+
 function Dashboard() {
+
+  const [dashboard, setDashboard] = useState({
+    students: 0,
+    teachers: 0,
+    present: 0,
+    absent: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  const loadDashboard = async () => {
+    try {
+
+      const res = await getDashboard();
+
+      setDashboard(res.data);
+
+    } catch (error) {
+
+      console.error("Dashboard Error:", error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
   return (
+
     <DashboardLayout>
-      <div className="mt-8">
-        <PageHeader />
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-  title="Total Students"
-  value="1,250"
-  icon={<Users size={28} />}
-  color="#2563EB"
-  change="+8.2%"
-/>
 
-<StatCard
-  title="Teachers"
-  value="54"
-  icon={<GraduationCap size={28} />}
-  color="#16A34A"
-  change="+2.5%"
-/>
+      <PageHeader />
 
-<StatCard
-  title="Present Today"
-  value="1,180"
-  icon={<UserCheck size={28} />}
-  color="#F59E0B"
-  change="+4.8%"
-/>
+      {/* Statistics */}
 
-<StatCard
-  title="Absent Today"
-  value="70"
-  icon={<UserX size={28} />}
-  color="#DC2626"
-  change="-1.3%"
-/>
-        </div>
-        <div className="mt-8 grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <AttendanceChart />
-          </div>
-          <AttendanceSummary />
-        </div>
-        <div>
-          <AttendanceTable />
-        </div>
+      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+
+        <StatCard
+          title="Total Students"
+          value={loading ? "..." : dashboard.students}
+          icon={<Users size={28} />}
+          color="#2563EB"
+          change=""
+        />
+
+        <StatCard
+          title="Teachers"
+          value={loading ? "..." : dashboard.teachers}
+          icon={<GraduationCap size={28} />}
+          color="#16A34A"
+          change=""
+        />
+
+        <StatCard
+          title="Present Today"
+          value={loading ? "..." : dashboard.present}
+          icon={<UserCheck size={28} />}
+          color="#22C55E"
+          change=""
+        />
+
+        <StatCard
+          title="Absent Today"
+          value={loading ? "..." : dashboard.absent}
+          icon={<UserX size={28} />}
+          color="#EF4444"
+          change=""
+        />
+
       </div>
+
+      {/* Analytics */}
+
+      <div className="grid gap-8 lg:grid-cols-3">
+
+        <div className="lg:col-span-2">
+          <AttendanceChart />
+        </div>
+
+        <AttendanceSummary />
+
+      </div>
+
+      {/* Recent Attendance */}
+
+      <AttendanceTable />
+
     </DashboardLayout>
+
   );
+
 }
 
 export default Dashboard;

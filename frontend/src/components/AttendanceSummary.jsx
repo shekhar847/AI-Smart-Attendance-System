@@ -1,117 +1,93 @@
-import {
-  CheckCircle2,
-  XCircle,
-  Clock3,
-  CalendarDays,
-} from "lucide-react";
-
-const summary = [
-  {
-    title: "Present",
-    value: 1180,
-    percent: 94,
-    color: "bg-emerald-500",
-    icon: <CheckCircle2 size={20} />,
-    iconBg: "bg-emerald-100 text-emerald-600",
-  },
-  {
-    title: "Absent",
-    value: 70,
-    percent: 6,
-    color: "bg-red-500",
-    icon: <XCircle size={20} />,
-    iconBg: "bg-red-100 text-red-600",
-  },
-  {
-    title: "Late",
-    value: 18,
-    percent: 2,
-    color: "bg-amber-500",
-    icon: <Clock3 size={20} />,
-    iconBg: "bg-amber-100 text-amber-600",
-  },
-  {
-    title: "Working Days",
-    value: 22,
-    percent: null,
-    color: "bg-blue-500",
-    icon: <CalendarDays size={20} />,
-    iconBg: "bg-blue-100 text-blue-600",
-  },
-];
+import { useEffect, useState } from "react";
+import { getStudents } from "../api/studentApi";
+import { getAttendance } from "../api/attendanceApi";
 
 function AttendanceSummary() {
+  const [students, setStudents] = useState([]);
+  const [attendance, setAttendance] = useState([]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const studentRes = await getStudents();
+      const attendanceRes = await getAttendance();
+
+      setStudents(studentRes.data);
+      setAttendance(attendanceRes.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const totalStudents = students.length;
+  const present = attendance.length;
+  const absent = totalStudents - present;
+
+  const percentage =
+    totalStudents > 0
+      ? ((present / totalStudents) * 100).toFixed(1)
+      : 0;
+
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-xl">
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-7 shadow-sm text-slate-800 dark:text-slate-100 transition-colors duration-300">
 
-      {/* Header */}
+      <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+        Today's Summary
+      </h2>
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Today's Summary
-        </h2>
+      <div className="mt-8 space-y-6">
 
-        <p className="mt-1 text-slate-500">
-          Attendance Overview
-        </p>
-      </div>
+        <div className="flex justify-between">
+          <span className="text-slate-600 dark:text-slate-400">Total Students</span>
+          <span className="font-bold">
+            {totalStudents}
+          </span>
+        </div>
 
-      <div className="space-y-7">
+        <div className="flex justify-between">
+          <span className="text-slate-600 dark:text-slate-400">Present</span>
+          <span className="font-bold text-green-600 dark:text-green-400">
+            {present}
+          </span>
+        </div>
 
-        {summary.map((item) => (
+        <div className="flex justify-between">
+          <span className="text-slate-600 dark:text-slate-400">Absent</span>
+          <span className="font-bold text-red-600 dark:text-red-400">
+            {absent}
+          </span>
+        </div>
 
-          <div key={item.title}>
+        <div className="pt-4">
 
-            <div className="mb-3 flex items-center justify-between">
+          <div className="flex justify-between mb-2">
 
-              <div className="flex items-center gap-4">
+            <span className="text-slate-600 dark:text-slate-400">Attendance Rate</span>
 
-                <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl ${item.iconBg}`}
-                >
-                  {item.icon}
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-slate-900">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    {item.value} Students
-                  </p>
-                </div>
-
-              </div>
-
-              {item.percent !== null && (
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
-                  {item.percent}%
-                </span>
-              )}
-
-            </div>
-
-            {item.percent !== null && (
-
-              <div className="h-3 overflow-hidden rounded-full bg-slate-100">
-
-                <div
-                  className={`h-full rounded-full transition-all duration-700 ${item.color}`}
-                  style={{
-                    width: `${item.percent}%`,
-                  }}
-                />
-
-              </div>
-
-            )}
+            <span className="font-bold">
+              {percentage}%
+            </span>
 
           </div>
 
-        ))}
+          <div className="h-3 rounded-full bg-gray-200 dark:bg-slate-800 overflow-hidden">
+
+            <div
+              className="h-full bg-green-600"
+              style={{
+                width: `${percentage}%`,
+              }}
+            />
+
+          </div>
+
+        </div>
 
       </div>
+
     </div>
   );
 }

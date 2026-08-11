@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { getAttendance } from "../api/attendanceApi";
+
 import {
   ResponsiveContainer,
   AreaChart,
@@ -8,53 +11,95 @@ import {
   Tooltip,
 } from "recharts";
 
-const data = [
-  { day: "Mon", present: 1090 },
-  { day: "Tue", present: 1145 },
-  { day: "Wed", present: 1120 },
-  { day: "Thu", present: 1190 },
-  { day: "Fri", present: 1210 },
-  { day: "Sat", present: 1180 },
-];
-
 function AttendanceChart() {
-  return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-xl">
 
-      {/* Header */}
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+
+    loadChart();
+
+    const interval = setInterval(() => {
+      loadChart();
+    }, 3000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
+  const loadChart = async () => {
+
+    try {
+
+      const res = await getAttendance();
+
+      const attendance = res.data;
+
+      const grouped = {};
+
+      attendance.forEach((item) => {
+
+        if (!grouped[item.date]) {
+          grouped[item.date] = 0;
+        }
+
+        grouped[item.date]++;
+
+      });
+
+      const data = Object.keys(grouped)
+        .sort()
+        .slice(-7)
+        .map((date) => ({
+          day: date.substring(5),
+          present: grouped[date],
+        }));
+
+      setChartData(data);
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+
+  };
+
+  return (
+
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-7 shadow-sm transition-all duration-300 hover:shadow-xl">
 
       <div className="mb-8 flex items-center justify-between">
 
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">
+
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Attendance Analytics
           </h2>
 
-          <p className="mt-1 text-slate-500">
-            Weekly student attendance overview
+          <p className="mt-1 text-slate-500 dark:text-slate-400">
+            Last 7 Days Attendance
           </p>
+
         </div>
 
-        <div className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600">
-          This Week
+        <div className="rounded-full bg-blue-50 dark:bg-blue-950/60 px-4 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400">
+
+          Live
+
         </div>
 
       </div>
 
-      {/* Chart */}
-
       <div className="h-80">
 
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+        >
 
           <AreaChart
-            data={data}
-            margin={{
-              top: 10,
-              right: 10,
-              left: -20,
-              bottom: 0,
-            }}
+            data={chartData}
           >
 
             <defs>
@@ -66,6 +111,7 @@ function AttendanceChart() {
                 x2="0"
                 y2="1"
               >
+
                 <stop
                   offset="0%"
                   stopColor="#2563EB"
@@ -77,61 +123,30 @@ function AttendanceChart() {
                   stopColor="#2563EB"
                   stopOpacity={0}
                 />
+
               </linearGradient>
 
             </defs>
 
             <CartesianGrid
               strokeDasharray="5 5"
-              stroke="#E2E8F0"
               vertical={false}
             />
 
             <XAxis
               dataKey="day"
-              tickLine={false}
-              axisLine={false}
-              tick={{
-                fill: "#64748B",
-                fontSize: 13,
-              }}
             />
 
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tick={{
-                fill: "#64748B",
-                fontSize: 13,
-              }}
-            />
+            <YAxis />
 
-            <Tooltip
-              contentStyle={{
-                borderRadius: "16px",
-                border: "none",
-                boxShadow:
-                  "0 12px 35px rgba(0,0,0,.12)",
-              }}
-            />
+            <Tooltip />
 
             <Area
               type="monotone"
               dataKey="present"
               stroke="#2563EB"
-              strokeWidth={4}
               fill="url(#attendance)"
-              animationDuration={1200}
-              dot={{
-                r: 5,
-                strokeWidth: 3,
-                stroke: "#2563EB",
-                fill: "#fff",
-              }}
-              activeDot={{
-                r: 8,
-                fill: "#2563EB",
-              }}
+              strokeWidth={4}
             />
 
           </AreaChart>
@@ -141,7 +156,9 @@ function AttendanceChart() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default AttendanceChart;
