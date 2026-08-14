@@ -1,63 +1,135 @@
 import json
+import os
+import httpx
 
-try:
-    import face_recognition
-except ImportError:
-    face_recognition = None
+
+AI_SERVICE_URL = os.getenv(
+    "AI_SERVICE_URL",
+    "http://ai-service:5000"
+)
 
 
 def generate_face_encoding(image_path):
     """
-    Generate face encoding from uploaded image.
-    Returns JSON string.
+    Generate face encoding using the AI microservice.
+    Returns JSON string or None.
     """
 
-    if face_recognition is None:
+    try:
+        with open(image_path, "rb") as image_file:
+
+            response = httpx.post(
+                f"{AI_SERVICE_URL}/extract-encoding",
+                files={
+                    "file": (
+                        os.path.basename(image_path),
+                        image_file,
+                        "image/jpeg"
+                    )
+                },
+                timeout=60.0
+            )
+
+        if response.status_code != 200:
+            print(
+                "AI Service Encoding Error:",
+                response.status_code,
+                response.text
+            )
+            return None
+
+        data = response.json()
+
+        encoding = data.get("face_encoding")
+
+        if not encoding:
+            return None
+
+        return json.dumps(encoding)
+
+    except Exception as e:
+        print("AI Service Connection Error:", e)
         return None
-
-    image = face_recognition.load_image_file(image_path)
-    encodings = face_recognition.face_encodings(image)
-
-    if len(encodings) == 0:
-        return None
-
-    return json.dumps(encodings[0].tolist())
 
 
 def recognize_face(image_path, students):
     """
-    Match unknown face with registered students.
+    Recognize a face using the AI microservice.
+
+    students:
+        SQLAlchemy Student objects containing:
+        id, name, roll, face_encoding
     """
 
-    if face_recognition is None:
-        return None
-
     try:
-        image = face_recognition.load_image_file(image_path)
-        encodings = face_recognition.face_encodings(image)
 
-        if len(encodings) == 0:
-            return None
-
-        unknown_encoding = encodings[0]
+        known_students = []
 
         for student in students:
 
             if not student.face_encoding:
                 continue
 
-            known_encoding = json.loads(student.face_encoding)
+            known_students.append({
+                "id": student.id,
+                "student_id": student.id,
+                "name": student.name,
+                "roll": student.roll,
+                "face_encoding": student.face_encoding
+            })
 
-            match = face_recognition.compare_faces(
-                [known_encoding],
-                unknown_encoding,
-                tolerance=0.50
+        if not known_students:
+            print("No students with face encodings found.")
+            return None
+
+        known_students_json = json.dumps(known_students)
+
+        with open(image_path, "rb") as image_file:
+
+            response = httpx.post(
+                f"{AI_SERVICE_URL}/recognize-face",
+                files={
+                    "file": (
+                        os.path.basename(image_path),
+                        image_file,
+                        "image/jpeg"
+                    )
+                },
+                data={
+                    "known_students_json": known_students_json,
+                    "tolerance": "0.5"
+                },
+                timeout=60.0
             )
 
-            if match[0]:
+        if response.status_code not in (200, 400):
+            print(
+                "AI Service Recognition Error:",
+                response.status_code,
+                response.text
+            )
+            return None
+
+        data = response.json()
+
+        if not data.get("matched"):
+            print(
+                "Face not matched:",
+                data.get("detail")
+            )
+            return None
+
+        matched_id = data.get("student_id")
+
+        if not matched_id:
+            return None
+
+        for student in students:
+            if student.id == matched_id:
                 return student
 
-    except Exception as e:
-        print(e)
+        return None
 
-    return None
+    except Exception as e:
+        print("AI Face Recognition Error:", e)
+        return None
