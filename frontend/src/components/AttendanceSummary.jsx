@@ -6,10 +6,6 @@ function AttendanceSummary() {
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState([]);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     try {
       const studentRes = await getStudents();
@@ -21,6 +17,10 @@ function AttendanceSummary() {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const totalStudents = students.length;
   const present = attendance.length;

@@ -15,38 +15,17 @@ function AttendanceChart() {
 
   const [chartData, setChartData] = useState([]);
 
-  useEffect(() => {
-
-    loadChart();
-
-    const interval = setInterval(() => {
-      loadChart();
-    }, 3000);
-
-    return () => clearInterval(interval);
-
-  }, []);
-
   const loadChart = async () => {
-
     try {
-
       const res = await getAttendance();
-
       const attendance = res.data;
-
       const grouped = {};
-
       attendance.forEach((item) => {
-
         if (!grouped[item.date]) {
           grouped[item.date] = 0;
         }
-
         grouped[item.date]++;
-
       });
-
       const data = Object.keys(grouped)
         .sort()
         .slice(-7)
@@ -54,16 +33,19 @@ function AttendanceChart() {
           day: date.substring(5),
           present: grouped[date],
         }));
-
       setChartData(data);
-
     } catch (err) {
-
       console.log(err);
-
     }
-
   };
+
+  useEffect(() => {
+    loadChart();
+    const interval = setInterval(() => {
+      loadChart();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
 

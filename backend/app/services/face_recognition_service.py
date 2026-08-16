@@ -5,7 +5,7 @@ import httpx
 
 AI_SERVICE_URL = os.getenv(
     "AI_SERVICE_URL",
-    "http://ai-service:5000"
+    "http://localhost:5000"
 )
 
 
@@ -130,6 +130,17 @@ def recognize_face(image_path, students):
 
         return None
 
+    except httpx.ConnectError:
+        print("[AI Microservice Notice] AI Service is not running on", AI_SERVICE_URL)
+        print("[Fallback] Running local face recognition engine...")
+        try:
+            from app.services.face_service import recognize_face as local_recognize_face
+            return local_recognize_face(image_path, students)
+        except Exception as fallback_err:
+            print("Local fallback face recognition error:", fallback_err)
+            return None
     except Exception as e:
         print("AI Face Recognition Error:", e)
         return None
+
+

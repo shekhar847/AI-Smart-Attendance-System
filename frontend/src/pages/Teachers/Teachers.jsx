@@ -8,10 +8,6 @@ function Teachers() {
 
   const [teachers, setTeachers] = useState([]);
 
-  useEffect(() => {
-    loadTeachers();
-  }, []);
-
   const loadTeachers = async () => {
     try {
       const res = await getTeachers();
@@ -20,6 +16,10 @@ function Teachers() {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    loadTeachers();
+  }, []);
 
   return (
     <DashboardLayout>

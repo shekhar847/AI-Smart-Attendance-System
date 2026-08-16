@@ -64,36 +64,60 @@ def recognize_student(
 
     os.makedirs("uploads/temp", exist_ok=True)
 
+    filename = file.filename or "captured.jpg"
     temp_path = os.path.join(
         "uploads/temp",
-        file.filename
+        filename
     )
 
-    with open(temp_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    try:
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-    students = db.query(Student).all()
+        students = db.query(Student).all()
 
-    student = recognize_face(temp_path, students)
+        student = recognize_face(temp_path, students)
 
-    os.remove(temp_path)
+        if student is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Face not recognized"
+            )
 
-    if student is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Face not recognized"
+        today = datetime.now().date()
+
+        already = db.query(Attendance).filter(
+            Attendance.student_id == student.id,
+            Attendance.date == today
+        ).first()
+
+        if already:
+            return {
+                "message": "Attendance already marked",
+                "student": {
+                    "id": student.id,
+                    "name": student.name,
+                    "roll": student.roll,
+                    "department": student.department,
+                    "year": student.year,
+                    "photo": student.photo
+                }
+            }
+
+        attendance = Attendance(
+            student_id=student.id,
+            date=today,
+            time=datetime.now().time(),
+            status="Present"
         )
 
-    today = datetime.now().date()
+        db.add(attendance)
+        db.commit()
+        db.refresh(attendance)
 
-    already = db.query(Attendance).filter(
-        Attendance.student_id == student.id,
-        Attendance.date == today
-    ).first()
-
-    if already:
         return {
-            "message": "Attendance already marked",
+            "message": "Attendance Marked Successfully",
+            "attendance_id": attendance.id,
             "student": {
                 "id": student.id,
                 "name": student.name,
@@ -103,27 +127,17 @@ def recognize_student(
                 "photo": student.photo
             }
         }
-
-    attendance = Attendance(
-        student_id=student.id,
-        date=today,
-        time=datetime.now().time(),
-        status="Present"
-    )
-
-    db.add(attendance)
-    db.commit()
-    db.refresh(attendance)
-
-    return {
-        "message": "Attendance Marked Successfully",
-        "attendance_id": attendance.id,
-        "student": {
-            "id": student.id,
-            "name": student.name,
-            "roll": student.roll,
-            "department": student.department,
-            "year": student.year,
-            "photo": student.photo
-        }
-    }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("[Recognize Endpoint Error]:", e)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Face recognition error: {str(e)}"
+        )
+    finally:
+        if os.path.exists(temp_path):
+            try:
+                os.remove(temp_path)
+            except Exception:
+                pass

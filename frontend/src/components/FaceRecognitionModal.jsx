@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
 import { recognizeFace } from "../api/attendanceApi";
+import API from "../api/client";
 
 function FaceRecognitionModal({ open, onClose }) {
   const webcamRef = useRef(null);

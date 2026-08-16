@@ -7,8 +7,19 @@ function AttendanceTable() {
   const [attendance, setAttendance] = useState([]);
   const [students, setStudents] = useState([]);
 
-  useEffect(() => {
+  const loadData = async () => {
+    try {
+      const attendanceRes = await getAttendance();
+      const studentRes = await getStudents();
 
+      setAttendance(attendanceRes.data);
+      setStudents(studentRes.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
     loadData();
 
     const interval = setInterval(() => {
@@ -16,26 +27,7 @@ function AttendanceTable() {
     }, 3000);
 
     return () => clearInterval(interval);
-
   }, []);
-
-  const loadData = async () => {
-
-    try {
-
-      const attendanceRes = await getAttendance();
-      const studentRes = await getStudents();
-
-      setAttendance(attendanceRes.data);
-      setStudents(studentRes.data);
-
-    } catch (err) {
-
-      console.log(err);
-
-    }
-
-  };
 
   const getStudent = (id) => {
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import API from "../api/client";
 
 function StudentModal({
   open,

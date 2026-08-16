@@ -4,6 +4,7 @@ import * as faceapi from "face-api.js";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 import { recognizeFace } from "../../api/attendanceApi";
+import API from "../../api/client";
 
 
 // ==========================================
@@ -47,8 +48,6 @@ function Attendance() {
   // STATES
   // ========================================
   const [modelsLoaded, setModelsLoaded] = useState(false);
-  const [detecting, setDetecting] = useState(false);
-
   const [studentData, setStudentData] = useState(null);
 
   const [result, setResult] = useState("");
@@ -175,7 +174,7 @@ function Attendance() {
 
       const canvas = canvasRef.current;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
       ctx.clearRect(
         0,
@@ -194,7 +193,7 @@ function Attendance() {
         resizedDetections
       );
 
-      setDetecting(detections.length > 0);
+      detectingRef.current = detections.length > 0;
 
     } catch (error) {
       console.error(

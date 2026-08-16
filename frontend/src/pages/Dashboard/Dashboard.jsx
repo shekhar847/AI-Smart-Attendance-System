@@ -28,27 +28,20 @@ function Dashboard() {
 
   const [loading, setLoading] = useState(true);
 
+  const loadDashboard = async () => {
+    try {
+      const res = await getDashboard();
+      setDashboard(res.data);
+    } catch (error) {
+      console.error("Dashboard Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadDashboard();
   }, []);
-
-  const loadDashboard = async () => {
-    try {
-
-      const res = await getDashboard();
-
-      setDashboard(res.data);
-
-    } catch (error) {
-
-      console.error("Dashboard Error:", error);
-
-    } finally {
-
-      setLoading(false);
-
-    }
-  };
 
   return (
 

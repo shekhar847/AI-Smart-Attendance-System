@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock, Eye, KeyRound, CheckCircle, X } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, KeyRound, CheckCircle, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginAdmin, requestForgotPassword, resetPassword } from "../../api/authApi";
 
@@ -30,6 +30,8 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -76,6 +78,7 @@ function Login() {
     setResetEmail(email.trim() || "");
     setResetToken("");
     setNewPassword("");
+    setShowNewPassword(false);
     setModalError("");
     setModalSuccess("");
   };
@@ -160,16 +163,19 @@ function Login() {
 
               <div className="relative">
                 <Input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   icon={Lock}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Eye
-                  size={20}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
 
               {error && (
@@ -295,13 +301,22 @@ function Login() {
                   <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
                     New Password
                   </label>
-                  <Input
-                    type="password"
-                    placeholder="Enter new password"
-                    icon={Lock}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showNewPassword ? "text" : "password"}
+                      placeholder="Enter new password"
+                      icon={Lock}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none transition-colors"
+                    >
+                      {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between">

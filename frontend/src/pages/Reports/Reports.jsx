@@ -36,6 +36,7 @@ import {
   getMonthlyReport,
   getBestStudent,
 } from "../../api/reportApi";
+import API from "../../api/client";
 
 function Reports() {
 
@@ -59,7 +60,6 @@ function Reports() {
     },
   ];
 
-  const COLORS = ["#22C55E", "#EF4444"];
   const today = new Date().toISOString().split("T")[0];
 
   const [fromDate, setFromDate] = useState(today);
@@ -67,14 +67,8 @@ function Reports() {
 
   const [dateReport, setDateReport] = useState([]);
 
-  useEffect(() => {
-    loadReports();
-  }, []);
-
   const loadReports = async () => {
-
     try {
-
       const summaryRes = await getSummary();
 
       console.log("========== SUMMARY ==========");
@@ -93,19 +87,18 @@ function Reports() {
       setDaily(dailyRes.data);
       setMonthly(monthlyRes.data);
       setBestStudent(bestRes.data);
-
     } catch (err) {
-
       console.error("Reports Error:", err);
-
       if (err.response) {
         console.log("Response Data:", err.response.data);
         console.log("Status:", err.response.status);
       }
-
     }
-
   };
+
+  useEffect(() => {
+    loadReports();
+  }, []);
 
   const generateDateReport = async () => {
     try {
