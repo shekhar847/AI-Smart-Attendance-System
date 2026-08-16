@@ -406,7 +406,7 @@ function Reports() {
           <div className="mt-6 flex items-center gap-6">
 
             <img
-              src={`http://127.0.0.1:8000/${bestStudent.photo}`}
+              src={`${API.defaults.baseURL}/${bestStudent.photo}`}
               alt={bestStudent.name}
               className="h-24 w-24 rounded-full border-4 border-white object-cover"
             />

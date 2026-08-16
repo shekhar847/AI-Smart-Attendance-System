@@ -1,30 +1,12 @@
 import axios from "axios";
 
-// ==========================================
-// API BASE URL
-// ==========================================
-
-const defaultBaseURL =
-  typeof window !== "undefined" &&
-  window.location.hostname === "localhost"
-    ? "http://localhost:8000"
-    : "http://127.0.0.1:8000";
-
 const baseURL =
-  import.meta.env.VITE_API_BASE_URL || defaultBaseURL;
-
-// ==========================================
-// Axios Instance
-// ==========================================
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 const API = axios.create({
-  baseURL: baseURL,
+  baseURL,
   timeout: 30000,
 });
-
-// ==========================================
-// Request Interceptor
-// ==========================================
 
 API.interceptors.request.use(
   (config) => {
@@ -38,19 +20,11 @@ API.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// ==========================================
-// Response Interceptor
-// ==========================================
-
 API.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     console.error(
       "API Error:",

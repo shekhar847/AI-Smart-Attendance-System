@@ -886,7 +886,7 @@ function Attendance() {
                 <img
                   src={
                     studentData.photo
-                      ? `http://127.0.0.1:8000/${studentData.photo}`
+                      ? `${API.defaults.baseURL}/${studentData.photo}`
                       : "/icons.svg"
                   }
                   alt={studentData.name}

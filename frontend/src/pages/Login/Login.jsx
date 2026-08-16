@@ -20,7 +20,7 @@ const parseErrorMessage = (err, defaultMsg) => {
     return detail.message || detail.msg || JSON.stringify(detail);
   }
   if (err.message === "Network Error" || !err.response) {
-    return "Cannot connect to backend server. Please ensure backend is running at http://localhost:8000";
+    return "Cannot connect to backend server. Please try again later.";
   }
   return err.message || defaultMsg;
 };

@@ -42,7 +42,7 @@ function AttendanceHistoryModal({
         <div className="flex items-center gap-5 p-6 border-b border-slate-100 dark:border-slate-800">
 
           <img
-            src={`http://127.0.0.1:8000/${data.student.photo}`}
+            src={`${API.defaults.baseURL}/${data.student.photo}`}
             alt=""
             className="h-24 w-24 rounded-full border border-slate-200 dark:border-slate-700 object-cover"
           />

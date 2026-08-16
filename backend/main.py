@@ -60,9 +60,13 @@ app = FastAPI(
 # =========================================================
 
 origins = [
+    # Local frontend
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
+
+    # Production frontend - Vercel
+    "https://ai-smart-attendance-system-iota.vercel.app",
 ]
 
 app.add_middleware(
@@ -92,6 +96,7 @@ app.include_router(best_student_route.router)
 
 app.include_router(camera_router)
 app.include_router(notification_router)
+
 
 # =========================================================
 # SERVE UPLOADED FILES

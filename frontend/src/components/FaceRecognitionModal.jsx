@@ -105,7 +105,7 @@ function FaceRecognitionModal({ open, onClose }) {
               <>
 
                 <img
-                  src={`http://127.0.0.1:8000/${student.photo}`}
+                  src={`${API.defaults.baseURL}/${student.photo}`}
                   alt=""
                   className="mx-auto mb-4 h-40 w-40 rounded-full object-cover"
                 />

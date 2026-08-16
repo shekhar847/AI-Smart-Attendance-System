@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: sql123
       MYSQL_DATABASE: ai_attendance
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -25,10 +25,8 @@ services:
       - DB_USER=root
       - DB_PASSWORD=sql123
       - DB_NAME=ai_attendance
-      - AI_SERVICE_URL=http://ai-service:5000
     depends_on:
       - db
-      - ai-service
     volumes:
       - ./backend/uploads:/app/uploads
 

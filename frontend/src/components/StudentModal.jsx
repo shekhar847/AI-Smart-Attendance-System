@@ -43,7 +43,7 @@ function StudentModal({
 
       if (student.photo) {
         setPhotoPreview(
-          `http://127.0.0.1:8000/${student.photo}`
+          `${API.defaults.baseURL}/${student.photo}`
         );
       } else {
         setPhotoPreview(null);
