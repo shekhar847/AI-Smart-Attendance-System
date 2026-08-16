@@ -44,67 +44,58 @@ function Dashboard() {
   }, []);
 
   return (
-
     <DashboardLayout>
+      <div className="space-y-8">
+        <PageHeader />
 
-      <PageHeader />
+        {/* Statistics */}
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            title="Total Students"
+            value={loading ? "..." : dashboard.students}
+            icon={<Users size={24} />}
+            color="#2563EB"
+            change=""
+          />
 
-      {/* Statistics */}
+          <StatCard
+            title="Teachers"
+            value={loading ? "..." : dashboard.teachers}
+            icon={<GraduationCap size={24} />}
+            color="#16A34A"
+            change=""
+          />
 
-      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            title="Present Today"
+            value={loading ? "..." : dashboard.present}
+            icon={<UserCheck size={24} />}
+            color="#22C55E"
+            change=""
+          />
 
-        <StatCard
-          title="Total Students"
-          value={loading ? "..." : dashboard.students}
-          icon={<Users size={28} />}
-          color="#2563EB"
-          change=""
-        />
-
-        <StatCard
-          title="Teachers"
-          value={loading ? "..." : dashboard.teachers}
-          icon={<GraduationCap size={28} />}
-          color="#16A34A"
-          change=""
-        />
-
-        <StatCard
-          title="Present Today"
-          value={loading ? "..." : dashboard.present}
-          icon={<UserCheck size={28} />}
-          color="#22C55E"
-          change=""
-        />
-
-        <StatCard
-          title="Absent Today"
-          value={loading ? "..." : dashboard.absent}
-          icon={<UserX size={28} />}
-          color="#EF4444"
-          change=""
-        />
-
-      </div>
-
-      {/* Analytics */}
-
-      <div className="grid gap-8 lg:grid-cols-3">
-
-        <div className="lg:col-span-2">
-          <AttendanceChart />
+          <StatCard
+            title="Absent Today"
+            value={loading ? "..." : dashboard.absent}
+            icon={<UserX size={24} />}
+            color="#EF4444"
+            change=""
+          />
         </div>
 
-        <AttendanceSummary />
+        {/* Analytics */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <AttendanceChart />
+          </div>
 
+          <AttendanceSummary />
+        </div>
+
+        {/* Recent Attendance */}
+        <AttendanceTable />
       </div>
-
-      {/* Recent Attendance */}
-
-      <AttendanceTable />
-
     </DashboardLayout>
-
   );
 
 }
