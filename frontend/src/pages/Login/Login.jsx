@@ -141,7 +141,8 @@ function Login() {
         <HeroSection />
 
         <div className="flex w-full justify-center lg:w-1/2">
-          <Card>
+          <div className="w-full max-w-md">
+            <Card>
             <Logo />
 
             <h2 className="mt-8 text-3xl font-bold text-slate-900 dark:text-slate-100">
@@ -208,6 +209,7 @@ function Login() {
             </div>
           </Card>
         </div>
+      </div>
       </div>
 
       {/* Forgot Password Modal */}

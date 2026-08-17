@@ -754,6 +754,7 @@ function Topbar() {
 
               {/* My Profile */}
 
+              {/* My Profile */}
               <button
                 onClick={() => {
                   setOpenMenu(false);
@@ -762,49 +763,27 @@ function Topbar() {
                 className="flex w-full items-center gap-3 px-5 py-4 transition hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
               >
                 <User size={18} />
-
                 My Profile
               </button>
 
-              {/* Settings */}
-
-              <button
-                onClick={() => {
-                  setOpenMenu(false);
-                  navigate(
-                    "/settings"
-                  );
-                }}
-                className="flex w-full items-center gap-3 px-5 py-4 transition hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
-              >
-                <Settings size={18} />
-
-                Settings
-              </button>
-
               {/* Logout */}
-
               <button
                 onClick={handleLogout}
                 className="flex w-full items-center gap-3 px-5 py-4 text-red-600 dark:text-red-400 transition hover:bg-red-50 dark:hover:bg-red-950/40"
               >
                 <LogOut size={18} />
-
                 Logout
               </button>
-
             </div>
           )}
-
         </div>
-
       </div>
 
       {/* =========================================================
           MY PROFILE MODAL
       ========================================================= */}
       {showProfileModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl transition-all text-slate-800 dark:text-slate-100">
             
             {/* Modal Close Button */}
