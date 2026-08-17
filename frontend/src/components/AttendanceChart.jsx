@@ -34,27 +34,10 @@ function AttendanceChart() {
           day: date.substring(5),
           present: grouped[date],
         }));
-      setChartData(data.length > 0 ? data : [
-        { day: "08-10", present: 12 },
-        { day: "08-11", present: 18 },
-        { day: "08-12", present: 25 },
-        { day: "08-13", present: 22 },
-        { day: "08-14", present: 30 },
-        { day: "08-15", present: 28 },
-        { day: "08-16", present: 35 },
-      ]);
+      setChartData(data);
     } catch (err) {
       console.log(err);
-      // Fallback mock preview if backend empty
-      setChartData([
-        { day: "Mon", present: 14 },
-        { day: "Tue", present: 22 },
-        { day: "Wed", present: 18 },
-        { day: "Thu", present: 29 },
-        { day: "Fri", present: 31 },
-        { day: "Sat", present: 24 },
-        { day: "Sun", present: 36 },
-      ]);
+      setChartData([]);
     }
   };
 

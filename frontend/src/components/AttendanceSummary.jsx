@@ -23,8 +23,8 @@ function AttendanceSummary() {
     loadData();
   }, []);
 
-  const totalStudents = students.length || 45;
-  const present = attendance.length || 38;
+  const totalStudents = students.length;
+  const present = attendance.length;
   const absent = Math.max(0, totalStudents - present);
 
   const percentage =
