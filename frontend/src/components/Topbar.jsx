@@ -38,7 +38,7 @@ function Topbar() {
     useState(false);
 
   const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark"
+    localStorage.getItem("theme") !== "light"
   );
 
   const [messageText, setMessageText] = useState("");
@@ -164,12 +164,13 @@ function Topbar() {
   // ==========================================
 
   useEffect(() => {
-    if (
-      localStorage.getItem("theme") === "dark"
-    ) {
-      document.documentElement.classList.add(
-        "dark"
-      );
+    if (localStorage.getItem("theme") === "light") {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+      if (!localStorage.getItem("theme")) {
+        localStorage.setItem("theme", "dark");
+      }
     }
   }, []);
 
