@@ -185,38 +185,8 @@ function StudentModal({
   // ==========================================
 
   return (
-    <div
-      className="
-        fixed
-        inset-0
-        z-50
-        flex
-        items-center
-        justify-center
-        bg-black/50
-        p-4
-        backdrop-blur-sm
-      "
-    >
-      <div
-        className="
-          max-h-[90vh]
-          w-full
-          max-w-4xl
-          overflow-y-auto
-          rounded-3xl
-          bg-white
-          dark:bg-slate-900
-          border
-          border-slate-200
-          dark:border-slate-800
-          text-slate-800
-          dark:text-slate-100
-          p-6
-          shadow-2xl
-          md:p-8
-        "
-      >
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 overflow-y-auto">
+      <div className="my-auto max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-7 shadow-2xl transition-all">
         {/* ==========================================
             HEADER
         ========================================== */}

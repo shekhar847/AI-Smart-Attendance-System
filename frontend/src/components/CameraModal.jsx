@@ -33,9 +33,8 @@ function CameraModal({ open, onClose, onSave, camera }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-
-            <div className="w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-800 dark:text-slate-100">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+            <div className="w-full max-w-md rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-7 shadow-2xl">
 
                 <h2 className="mb-6 text-2xl font-bold text-slate-900 dark:text-slate-100">
                     {camera ? "Edit Camera" : "Add Camera"}

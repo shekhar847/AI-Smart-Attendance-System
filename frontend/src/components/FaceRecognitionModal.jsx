@@ -43,7 +43,7 @@ function FaceRecognitionModal({ open, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
       <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl glass-card border border-white/20 dark:border-slate-800 p-6 md:p-8 shadow-2xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/60 pb-5">

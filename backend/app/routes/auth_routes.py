@@ -31,17 +31,23 @@ def login(
     admin: AdminLogin,
     db: Session = Depends(get_db)
 ):
+    clean_email = admin.email.strip().lower()
 
     user = (
         db.query(Admin)
-        .filter(Admin.email == admin.email)
+        .filter((Admin.email == clean_email) | (Admin.email == admin.email.strip()))
         .first()
     )
 
     if not user:
+        # Fallback case-insensitive check
+        all_users = db.query(Admin).all()
+        user = next((u for u in all_users if u.email.strip().lower() == clean_email), None)
+
+    if not user:
         raise HTTPException(
             status_code=401,
-            detail="Invalid Email"
+            detail="Invalid Email or Password"
         )
 
     if not verify_password(
@@ -50,8 +56,16 @@ def login(
     ):
         raise HTTPException(
             status_code=401,
-            detail="Invalid Password"
+            detail="Invalid Email or Password"
         )
+
+    # Auto-upgrade plain-text password to bcrypt hash on successful login
+    if not (user.password.startswith("$2b$") or user.password.startswith("$2a$")):
+        try:
+            user.password = hash_password(admin.password)
+            db.commit()
+        except Exception:
+            db.rollback()
 
     expire = datetime.utcnow() + timedelta(hours=24)
 

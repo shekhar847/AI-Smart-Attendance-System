@@ -11,10 +11,16 @@ def hash_password(password: str):
 
 
 def verify_password(
-    plain_password,
-    hashed_password
+    plain_password: str,
+    hashed_password: str
 ):
-    return pwd_context.verify(
-        plain_password,
-        hashed_password
-    )
+    if not hashed_password or not plain_password:
+        return False
+    try:
+        return pwd_context.verify(
+            plain_password,
+            hashed_password
+        )
+    except Exception:
+        # Fallback if DB password is plain text
+        return plain_password == hashed_password
