@@ -16,11 +16,12 @@ import {
   ShieldCheck,
   Mail,
   Sparkles,
+  Menu,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 
-function Topbar() {
+function Topbar({ onToggleSidebar }) {
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem("admin"));
@@ -312,25 +313,35 @@ function Topbar() {
   // ==========================================
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0b0f19]/80 px-8 py-3.5 backdrop-blur-xl transition-all duration-300">
-      {/* Search Input */}
-      <div className="relative flex items-center">
-        <Search
-          size={18}
-          className="absolute left-4 text-slate-400 dark:text-slate-500 pointer-events-none"
-        />
-        <input
-          type="text"
-          placeholder="Search students, classes, records..."
-          className="w-80 md:w-96 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/70 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 py-2.5 pl-11 pr-14 outline-none transition-all duration-200 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-indigo-500/10"
-        />
-        <kbd className="absolute right-3 hidden sm:inline-flex items-center gap-1 rounded-md border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-          ⌘K
-        </kbd>
+    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0b0f19]/80 px-4 sm:px-6 lg:px-8 py-3.5 backdrop-blur-xl transition-all duration-300 gap-3">
+      {/* Mobile Toggle & Search Input */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <button
+          onClick={onToggleSidebar}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/70 text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 lg:hidden transition-all duration-200 active:scale-95"
+          title="Toggle Sidebar"
+        >
+          <Menu size={20} />
+        </button>
+
+        <div className="relative flex items-center flex-1 max-w-[200px] sm:max-w-xs md:max-w-md lg:max-w-lg">
+          <Search
+            size={18}
+            className="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none"
+          />
+          <input
+            type="text"
+            placeholder="Search students, records..."
+            className="w-full rounded-xl border border-slate-200/90 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/70 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 py-2 pl-10 pr-12 outline-none transition-all duration-200 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-indigo-500/10"
+          />
+          <kbd className="absolute right-3 hidden sm:inline-flex items-center gap-1 rounded-md border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+            ⌘K
+          </kbd>
+        </div>
       </div>
 
       {/* Right Actions & Status Pills */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
         {/* System Online Status Pill */}
         <div className="hidden lg:flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
           <span className="relative flex h-2 w-2">
@@ -369,7 +380,7 @@ function Topbar() {
           ================================== */}
 
           {openMessages && (
-            <div className="absolute right-0 top-14 z-50 w-96 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="absolute right-0 top-14 z-50 w-[calc(100vw-2rem)] sm:w-96 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
 
               {/* Header */}
 
@@ -519,7 +530,7 @@ function Topbar() {
           ================================== */}
 
           {openNotifications && (
-            <div className="absolute right-0 top-14 z-50 w-96 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="absolute right-0 top-14 z-50 w-[calc(100vw-2rem)] sm:w-96 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
 
               {/* Header */}
 

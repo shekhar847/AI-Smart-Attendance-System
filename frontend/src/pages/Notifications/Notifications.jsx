@@ -8,6 +8,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import DashboardLayout from "../../layouts/DashboardLayout";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -224,7 +225,8 @@ function Notifications() {
   // ==========================================
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <DashboardLayout>
+      <div className="text-slate-800 dark:text-slate-100 transition-colors duration-300">
 
       {/* ======================================
           HEADER
@@ -514,7 +516,8 @@ function Notifications() {
 
       </div>
     </div>
-  );
+  </DashboardLayout>
+);
 }
 
 export default Notifications;

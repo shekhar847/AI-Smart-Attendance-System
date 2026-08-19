@@ -9,6 +9,7 @@ import {
   Sparkles,
   Video,
   Activity,
+  X,
 } from "lucide-react";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -51,7 +52,7 @@ const menuItems = [
   },
 ];
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -64,24 +65,41 @@ function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 flex h-screen w-72 flex-col overflow-y-auto border-r border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-[#0b0f19]/85 backdrop-blur-2xl transition-all duration-300 shadow-xl z-50">
+    <aside
+      className={`fixed left-0 top-0 flex h-screen w-72 flex-col overflow-y-auto border-r border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-2xl transition-transform duration-300 shadow-xl z-50 ${
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      }`}
+    >
       {/* Logo Header */}
-      <div className="border-b border-slate-200/70 dark:border-slate-800/70 px-6 py-6">
+      <div className="flex items-center justify-between border-b border-slate-200/70 dark:border-slate-800/70 px-6 py-5">
         <div className="flex items-center gap-3.5">
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 shadow-lg shadow-blue-500/25">
-            <Sparkles size={24} className="text-white animate-pulse" />
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 shadow-lg shadow-blue-500/25">
+            <Sparkles size={22} className="text-white animate-pulse" />
             <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-cyan-400 to-indigo-500 opacity-30 blur-sm" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+            <h1 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
               <span>AI</span>
-              <span className="gradient-text">Attendance</span>
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">
+                Attendance
+              </span>
             </h1>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
               Smart Vision OS v2.4
             </p>
           </div>
         </div>
+
+        {/* Close Button on Mobile */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="rounded-xl p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
+            title="Close Navigation"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       {/* Navigation Links */}
@@ -97,6 +115,7 @@ function Sidebar() {
               icon={item.icon}
               title={item.title}
               to={item.to}
+              onClick={onClose}
             />
           ))}
         </div>
@@ -135,10 +154,15 @@ function Sidebar() {
   );
 }
 
-function MenuItem({ icon, title, to }) {
+function MenuItem({ icon, title, to, onClick }) {
   return (
     <NavLink
       to={to}
+      onClick={() => {
+        if (onClick && window.innerWidth < 1024) {
+          onClick();
+        }
+      }}
       className={({ isActive }) =>
         `group relative flex items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
           isActive
