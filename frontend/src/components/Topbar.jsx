@@ -313,7 +313,7 @@ function Topbar({ onToggleSidebar }) {
   // ==========================================
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0b0f19]/80 px-4 sm:px-6 lg:px-8 py-3.5 backdrop-blur-xl transition-all duration-300 gap-3">
+    <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3.5 gap-3">
       {/* Mobile Toggle & Search Input */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <button
@@ -875,7 +875,7 @@ function Topbar({ onToggleSidebar }) {
         </div>
       )}
 
-    </header>
+    </div>
   );
 }
 
