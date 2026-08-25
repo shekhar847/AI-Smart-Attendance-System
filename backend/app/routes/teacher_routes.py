@@ -11,6 +11,8 @@ router = APIRouter(
 )
 
 
+from app.services.auth_service import hash_password
+
 @router.get("/")
 def get_teachers(db: Session = Depends(get_db)):
     return db.query(Teacher).all()
@@ -33,12 +35,15 @@ def add_teacher(teacher: TeacherSchema, db: Session = Depends(get_db)):
     if existing_id:
         raise HTTPException(status_code=400, detail="Employee ID already exists")
 
+    pwd_hash = hash_password(teacher.password) if teacher.password else hash_password(teacher.employee_id)
+
     new_teacher = Teacher(
         name=teacher.name,
         email=teacher.email,
         employee_id=teacher.employee_id,
         department=teacher.department,
-        designation=teacher.designation
+        designation=teacher.designation,
+        password=pwd_hash
     )
 
     db.add(new_teacher)
@@ -70,6 +75,8 @@ def update_teacher(
     existing_teacher.employee_id = teacher.employee_id
     existing_teacher.department = teacher.department
     existing_teacher.designation = teacher.designation
+    if teacher.password:
+        existing_teacher.password = hash_password(teacher.password)
 
     db.commit()
     db.refresh(existing_teacher)

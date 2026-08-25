@@ -11,3 +11,4 @@ class Teacher(Base):
     employee_id = Column(String(50), unique=True)
     department = Column(String(100))
     designation = Column(String(100))
+    password = Column(String(255), nullable=True)

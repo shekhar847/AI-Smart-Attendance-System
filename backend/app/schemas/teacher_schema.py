@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class Teacher(BaseModel):
@@ -7,6 +8,7 @@ class Teacher(BaseModel):
     employee_id: str
     department: str
     designation: str
+    password: Optional[str] = None
 
     class Config:
         from_attributes = True

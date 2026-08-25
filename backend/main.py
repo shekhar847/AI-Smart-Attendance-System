@@ -1,17 +1,26 @@
 import os
+import asyncio
+import logging
+from datetime import datetime
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.config.database import Base, engine
+from app.config.database import Base, engine, SessionLocal
+from app.config.db_migration import migrate_db
+
+logger = logging.getLogger("uvicorn")
 
 # =========================================================
-# CREATE UPLOAD DIRECTORIES
+# CREATE UPLOAD DIRECTORIES & RUN DB MIGRATIONS
 # =========================================================
 
 os.makedirs("uploads/students", exist_ok=True)
 os.makedirs("uploads/temp", exist_ok=True)
+
+Base.metadata.create_all(bind=engine)
+migrate_db()
 
 
 # =========================================================
@@ -25,23 +34,16 @@ from app.routes.dashboard_routes import router as dashboard_router
 from app.routes.report_routes import router as report_router
 from app.routes.auth_routes import router as auth_router
 from app.routes.admin_route import router as admin_router
+from app.routes.alert_routes import router as alert_router
 
 from app.routes import report_filter_route
 from app.routes import monthly_report_route
 from app.routes import best_student_route
 
 from app.routes.cameras_routes import router as camera_router
-
-from app.models.camera_model import Camera
-from app.models.notification_model import Notification
 from app.routes.notification_routes import router as notification_router
 
-
-# =========================================================
-# DATABASE TABLES
-# =========================================================
-
-Base.metadata.create_all(bind=engine)
+from app.services.alert_service import get_or_create_settings, check_and_trigger_absent_alerts
 
 
 # =========================================================
@@ -53,6 +55,48 @@ app = FastAPI(
     version="1.0.0",
     description="Backend API for AI Smart Attendance System"
 )
+
+
+# =========================================================
+# BACKGROUND SCHEDULER FOR PARENT ALERTS AT CUTOFF TIME
+# =========================================================
+
+async def automated_cutoff_alert_scheduler():
+    """
+    Background worker that runs continuously and checks if local time matches configured cutoff time (e.g. 09:00).
+    When matched, triggers automated parent SMS / WhatsApp alerts for absent students.
+    """
+    logger.info("[SCHEDULER] Automated Parent Alert Scheduler started.")
+    last_triggered_date = None
+
+    while True:
+        try:
+            now = datetime.now()
+            today_date = now.date()
+            current_time_str = now.strftime("%H:%M")
+
+            if last_triggered_date != today_date:
+                db = SessionLocal()
+                try:
+                    setting = get_or_create_settings(db)
+                    if setting.enabled and setting.cutoff_time == current_time_str:
+                        logger.info(f"[SCHEDULER] Cutoff time {current_time_str} reached! Triggering automated parent alerts...")
+                        result = await check_and_trigger_absent_alerts(db)
+                        logger.info(f"[SCHEDULER] Alert Trigger Result: {result}")
+                        last_triggered_date = today_date
+                except Exception as ex:
+                    logger.error(f"[SCHEDULER ERROR] Failed to check/trigger parent alerts: {ex}")
+                finally:
+                    db.close()
+        except Exception as e:
+            logger.error(f"[SCHEDULER LOOP ERROR] {e}")
+
+        await asyncio.sleep(45)  # Check every 45 seconds
+
+
+@app.on_event("startup")
+async def on_startup():
+    asyncio.create_task(automated_cutoff_alert_scheduler())
 
 
 # =========================================================
@@ -87,6 +131,7 @@ app.include_router(dashboard_router)
 app.include_router(report_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(alert_router)
 
 app.include_router(report_filter_route.router)
 app.include_router(monthly_report_route.router)

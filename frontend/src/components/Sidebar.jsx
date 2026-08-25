@@ -10,54 +10,112 @@ import {
   Video,
   Activity,
   X,
+  BellRing,
+  UserCheck,
 } from "lucide-react";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    icon: <LayoutDashboard size={19} />,
-    to: "/dashboard",
-  },
-  {
-    title: "Students",
-    icon: <Users size={19} />,
-    to: "/students",
-  },
-  {
-    title: "Teachers",
-    icon: <GraduationCap size={19} />,
-    to: "/teachers",
-  },
-  {
-    title: "Attendance",
-    icon: <Camera size={19} />,
-    to: "/attendance",
-  },
-  {
-    title: "Cameras",
-    icon: <Video size={19} />,
-    to: "/cameras",
-  },
-  {
-    title: "Reports",
-    icon: <BarChart3 size={19} />,
-    to: "/reports",
-  },
-  {
-    title: "Settings",
-    icon: <Settings size={19} />,
-    to: "/settings",
-  },
-];
-
 function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
+  const role = localStorage.getItem("user_role") || "admin";
+  const userJson = localStorage.getItem("user");
+  const user = userJson ? JSON.parse(userJson) : null;
+
+  const getMenuItems = () => {
+    if (role === "student") {
+      return [
+        {
+          title: "My Attendance",
+          icon: <UserCheck size={19} />,
+          to: "/student-portal",
+        },
+        {
+          title: "Parent Alerts",
+          icon: <BellRing size={19} />,
+          to: "/student-portal?tab=alerts",
+        },
+      ];
+    }
+
+    if (role === "teacher") {
+      return [
+        {
+          title: "Dashboard",
+          icon: <LayoutDashboard size={19} />,
+          to: "/dashboard",
+        },
+        {
+          title: "Students",
+          icon: <Users size={19} />,
+          to: "/students",
+        },
+        {
+          title: "Attendance",
+          icon: <Camera size={19} />,
+          to: "/attendance",
+        },
+        {
+          title: "Reports",
+          icon: <BarChart3 size={19} />,
+          to: "/reports",
+        },
+      ];
+    }
+
+    // Default Admin
+    return [
+      {
+        title: "Dashboard",
+        icon: <LayoutDashboard size={19} />,
+        to: "/dashboard",
+      },
+      {
+        title: "Students",
+        icon: <Users size={19} />,
+        to: "/students",
+      },
+      {
+        title: "Teachers",
+        icon: <GraduationCap size={19} />,
+        to: "/teachers",
+      },
+      {
+        title: "Attendance",
+        icon: <Camera size={19} />,
+        to: "/attendance",
+      },
+      {
+        title: "Cameras",
+        icon: <Video size={19} />,
+        to: "/cameras",
+      },
+      {
+        title: "Reports",
+        icon: <BarChart3 size={19} />,
+        to: "/reports",
+      },
+      {
+        title: "Parent Alerts",
+        icon: <BellRing size={19} />,
+        to: "/alert-settings",
+      },
+      {
+        title: "Settings",
+        icon: <Settings size={19} />,
+        to: "/settings",
+      },
+    ];
+  };
+
+  const menuItems = getMenuItems();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("admin");
+    localStorage.removeItem("user");
+    localStorage.removeItem("user_role");
 
     navigate("/login", {
       replace: true,
@@ -84,8 +142,8 @@ function Sidebar({ isOpen, onClose }) {
                 Attendance
               </span>
             </h1>
-            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              Smart Vision OS v2.4
+            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              {role === "admin" ? "Admin Portal" : role === "teacher" ? "Teacher Portal" : "Student Portal"}
             </p>
           </div>
         </div>
@@ -121,24 +179,24 @@ function Sidebar({ isOpen, onClose }) {
         </div>
       </nav>
 
-      {/* AI Live Engine Badge & Logout */}
+      {/* AI Live Engine Badge & User Info & Logout */}
       <div className="mt-auto border-t border-slate-200/70 dark:border-slate-800/70 p-4 space-y-3">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 p-4 text-white shadow-lg shadow-indigo-500/20">
           <div className="absolute -right-4 -bottom-4 h-20 w-20 rounded-full bg-white/10 blur-xl pointer-events-none" />
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
-              <Activity size={10} className="animate-spin" /> Live Scan
+              <Activity size={10} className="animate-spin" /> Live Engine
             </span>
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
             </span>
           </div>
-          <h3 className="mt-2 text-sm font-extrabold tracking-wide">
-            Face AI Detection Active
+          <h3 className="mt-2 text-xs font-extrabold tracking-wide truncate">
+            {user?.name || (role === "admin" ? "Administrator" : role === "teacher" ? "Teacher" : "Student")}
           </h3>
-          <p className="mt-0.5 text-xs text-blue-100/90 font-medium">
-            99.4% Recognition Accuracy
+          <p className="mt-0.5 text-[11px] text-blue-100/90 font-medium truncate">
+            {user?.email || (role === "admin" ? "admin@gmail.com" : user?.roll || "Active Session")}
           </p>
         </div>
 

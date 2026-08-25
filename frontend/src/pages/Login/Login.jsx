@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, KeyRound, CheckCircle, X } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, KeyRound, CheckCircle, X, Shield, GraduationCap, UserCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { loginAdmin, requestForgotPassword, resetPassword } from "../../api/authApi";
+import { loginAdmin, loginTeacher, loginStudent, requestForgotPassword, resetPassword } from "../../api/authApi";
 
 import HeroSection from "../../components/HeroSection";
 import Logo from "../../components/Logo";
@@ -20,7 +20,7 @@ const parseErrorMessage = (err, defaultMsg) => {
     return detail.message || detail.msg || JSON.stringify(detail);
   }
   if (err.message === "Network Error" || !err.response) {
-    return "Cannot connect to backend server. Please try again later.";
+    return "Cannot connect to backend server. Please check backend server status.";
   }
   return err.message || defaultMsg;
 };
@@ -28,7 +28,10 @@ const parseErrorMessage = (err, defaultMsg) => {
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  // Role state: "admin" | "teacher" | "student"
+  const [activeRole, setActiveRole] = useState("admin");
+
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -38,7 +41,7 @@ function Login() {
 
   // Forgot Password Modal state
   const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1); // 1: Email, 2: Token & New Password
+  const [forgotStep, setForgotStep] = useState(1);
   const [resetEmail, setResetEmail] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -47,24 +50,38 @@ function Login() {
   const [modalSuccess, setModalSuccess] = useState("");
 
   const handleLogin = async () => {
-    const cleanEmail = email.trim();
-    if (!cleanEmail || !password) {
-      setError("Email and Password are required");
+    const cleanId = identifier.trim();
+    if (!cleanId || !password) {
+      setError("Email/ID and Password are required");
       return;
     }
     setLoading(true);
     setError("");
 
     try {
-      const res = await loginAdmin({
-        email: cleanEmail,
-        password,
-      });
-
-      localStorage.setItem("token", res.data.access_token);
-      localStorage.setItem("admin", JSON.stringify(res.data.admin));
-
-      navigate("/dashboard");
+      let res;
+      if (activeRole === "admin") {
+        res = await loginAdmin({ email: cleanId, password });
+        localStorage.setItem("token", res.data.access_token);
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("user_role", "admin");
+        localStorage.setItem("user", JSON.stringify(res.data.user || res.data.admin));
+        navigate("/dashboard");
+      } else if (activeRole === "teacher") {
+        res = await loginTeacher(cleanId, password);
+        localStorage.setItem("token", res.data.access_token);
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("user_role", "teacher");
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        navigate("/dashboard");
+      } else {
+        res = await loginStudent(cleanId, password);
+        localStorage.setItem("token", res.data.access_token);
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("user_role", "student");
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        navigate("/student-portal");
+      }
     } catch (err) {
       setError(parseErrorMessage(err, "Login Failed"));
     } finally {
@@ -75,7 +92,7 @@ function Login() {
   const handleOpenForgot = () => {
     setShowForgotModal(true);
     setForgotStep(1);
-    setResetEmail(email.trim() || "");
+    setResetEmail(identifier.trim() || "");
     setResetToken("");
     setNewPassword("");
     setShowNewPassword(false);
@@ -124,7 +141,7 @@ function Login() {
       const res = await resetPassword(cleanEmail, cleanToken, newPassword);
       setModalSuccess(res.data.message || "Password reset successfully!");
       setTimeout(() => {
-        setEmail(cleanEmail);
+        setIdentifier(cleanEmail);
         setPassword(newPassword);
         setShowForgotModal(false);
       }, 2000);
@@ -143,73 +160,140 @@ function Login() {
         <div className="flex w-full justify-center lg:w-1/2">
           <div className="w-full max-w-md">
             <Card>
-            <Logo />
+              <Logo />
 
-            <h2 className="mt-8 text-3xl font-bold text-slate-900 dark:text-slate-100">
-              Welcome Back
-            </h2>
+              <h2 className="mt-6 text-2xl font-extrabold text-slate-900 dark:text-slate-100">
+                AI Smart Attendance Portal
+              </h2>
 
-            <p className="mt-2 text-slate-500 dark:text-slate-400">
-              Login to continue
-            </p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Select your role to log into your dedicated workspace
+              </p>
 
-            <div className="mt-8 space-y-5">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                icon={Mail}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  icon={Lock}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+              {/* Role Selection Tabs */}
+              <div className="mt-6 grid grid-cols-3 gap-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 p-1 border border-slate-200/80 dark:border-slate-700/80">
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none transition-colors"
+                  onClick={() => { setActiveRole("admin"); setError(""); }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    activeRole === "admin"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  <Shield size={16} className="mb-1" />
+                  <span>Admin</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setActiveRole("teacher"); setError(""); }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    activeRole === "teacher"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  <GraduationCap size={16} className="mb-1" />
+                  <span>Teacher</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setActiveRole("student"); setError(""); }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    activeRole === "student"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  <UserCheck size={16} className="mb-1" />
+                  <span>Student/Parent</span>
                 </button>
               </div>
 
-              {error && (
-                <div className="rounded-lg bg-red-100 dark:bg-red-950/60 p-3 text-center text-red-700 dark:text-red-400 text-sm font-semibold">
-                  {error}
+              <div className="mt-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                    {activeRole === "admin"
+                      ? "Admin Email Address"
+                      : activeRole === "teacher"
+                      ? "Teacher Email or Employee ID"
+                      : "Student Roll Number or Email"}
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={
+                      activeRole === "admin"
+                        ? "admin@gmail.com"
+                        : activeRole === "teacher"
+                        ? "teacher@gmail.com or EMP001"
+                        : "Roll No. e.g. CS101 or email"
+                    }
+                    icon={Mail}
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                  />
                 </div>
-              )}
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                  <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
-                  Remember me
-                </label>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder={
+                        activeRole === "admin"
+                          ? "Enter your admin password"
+                          : activeRole === "teacher"
+                          ? "Enter password (Default: Employee ID)"
+                          : "Enter password (Default: Roll Number)"
+                      }
+                      icon={Lock}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleOpenForgot}
-                  className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors"
-                >
-                  Forgot Password?
-                </button>
+                {error && (
+                  <div className="rounded-lg bg-red-100 dark:bg-red-950/60 p-3 text-center text-red-700 dark:text-red-400 text-xs font-semibold">
+                    {error}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-xs">
+                  <label className="flex items-center gap-2 text-slate-600 dark:text-slate-300 cursor-pointer">
+                    <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" defaultChecked />
+                    Remember me
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={handleOpenForgot}
+                    className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+
+                <Button onClick={handleLogin} disabled={loading}>
+                  {loading
+                    ? "Authenticating..."
+                    : `Login as ${activeRole.toUpperCase()} →`}
+                </Button>
               </div>
-
-              <Button
-                onClick={handleLogin}
-                disabled={loading}
-              >
-                {loading ? "Signing In..." : "Sign In →"}
-              </Button>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
-      </div>
       </div>
 
       {/* Forgot Password Modal */}
@@ -246,7 +330,7 @@ function Login() {
             {forgotStep === 1 ? (
               <form onSubmit={handleRequestCode} className="mt-4 space-y-4">
                 <p className="text-sm text-slate-600">
-                  Enter your registered admin email address below to receive a password reset verification code.
+                  Enter your registered email address below to receive a password reset verification code.
                 </p>
                 <div>
                   <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
@@ -254,7 +338,7 @@ function Login() {
                   </label>
                   <Input
                     type="email"
-                    placeholder="admin@gmail.com"
+                    placeholder="user@gmail.com"
                     icon={Mail}
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}

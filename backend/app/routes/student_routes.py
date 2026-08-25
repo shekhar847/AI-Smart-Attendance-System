@@ -33,6 +33,8 @@ def get_students(db: Session = Depends(get_db)):
 # ==========================
 # ADD STUDENT
 # ==========================
+from app.services.auth_service import hash_password
+
 @router.post("/")
 def add_student(student: StudentSchema, db: Session = Depends(get_db)):
 
@@ -46,12 +48,18 @@ def add_student(student: StudentSchema, db: Session = Depends(get_db)):
     if existing_roll:
         raise HTTPException(status_code=400, detail="Roll number already exists")
 
+    pwd_hash = hash_password(student.password) if student.password else hash_password(student.roll)
+
     new_student = Student(
         name=student.name,
         email=student.email,
         roll=student.roll,
         department=student.department,
-        year=student.year
+        year=student.year,
+        parent_name=student.parent_name,
+        parent_phone=student.parent_phone,
+        parent_email=student.parent_email,
+        password=pwd_hash
     )
 
     db.add(new_student)
@@ -84,6 +92,14 @@ def update_student(
     existing_student.roll = student.roll
     existing_student.department = student.department
     existing_student.year = student.year
+    if student.parent_name is not None:
+        existing_student.parent_name = student.parent_name
+    if student.parent_phone is not None:
+        existing_student.parent_phone = student.parent_phone
+    if student.parent_email is not None:
+        existing_student.parent_email = student.parent_email
+    if student.password:
+        existing_student.password = hash_password(student.password)
 
     db.commit()
     db.refresh(existing_student)

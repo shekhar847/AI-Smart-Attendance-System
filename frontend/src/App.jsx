@@ -10,11 +10,12 @@ import Cameras from "./pages/Cameras/Cameras";
 import Login from "./pages/Login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notifications from "./pages/Notifications/Notifications";
+import AlertSettings from "./pages/AlertSettings/AlertSettings";
+import StudentPortal from "./pages/StudentPortal/StudentPortal";
 
 function App() {
   return (
     <Routes>
-
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       <Route path="/login" element={<Login />} />
@@ -22,7 +23,7 @@ function App() {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "teacher"]}>
             <Dashboard />
           </ProtectedRoute>
         }
@@ -31,7 +32,7 @@ function App() {
       <Route
         path="/students"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "teacher"]}>
             <Students />
           </ProtectedRoute>
         }
@@ -40,7 +41,7 @@ function App() {
       <Route
         path="/teachers"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin"]}>
             <Teachers />
           </ProtectedRoute>
         }
@@ -49,7 +50,7 @@ function App() {
       <Route
         path="/attendance"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "teacher"]}>
             <Attendance />
           </ProtectedRoute>
         }
@@ -58,8 +59,26 @@ function App() {
       <Route
         path="/reports"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "teacher"]}>
             <Reports />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/alert-settings"
+        element={
+          <ProtectedRoute allowedRoles={["admin", "teacher"]}>
+            <AlertSettings />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/student-portal"
+        element={
+          <ProtectedRoute allowedRoles={["student", "admin", "teacher"]}>
+            <StudentPortal />
           </ProtectedRoute>
         }
       />
@@ -67,7 +86,7 @@ function App() {
       <Route
         path="/settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin"]}>
             <Settings />
           </ProtectedRoute>
         }
@@ -76,7 +95,7 @@ function App() {
       <Route
         path="/cameras"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin"]}>
             <Cameras />
           </ProtectedRoute>
         }
@@ -85,12 +104,11 @@ function App() {
       <Route
         path="/notifications"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "teacher", "student"]}>
             <Notifications />
           </ProtectedRoute>
         }
       />
-
     </Routes>
   );
 }
