@@ -24,19 +24,27 @@ else:
     DATABASE_URL = (
         f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
-    try:
-        engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
-        # Verify connection
-        with engine.connect() as conn:
-            pass
-    except Exception as e:
-        print(f"[WARNING] MySQL connection failed ({e}). Falling back to SQLite database.")
-        DATABASE_URL = "sqlite:///./ai_attendance.db"
-        engine = create_engine(
-            DATABASE_URL,
-            connect_args={"check_same_thread": False},
-            echo=False
-        )
+    import time
+    engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
+    
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            with engine.connect() as conn:
+                print("[INFO] Successfully connected to MySQL database.")
+                break
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"[WARNING] MySQL connection failed. Retrying in 5 seconds... ({e})")
+                time.sleep(5)
+            else:
+                print(f"[ERROR] MySQL connection failed after {max_retries} attempts. Falling back to SQLite.")
+                DATABASE_URL = "sqlite:///./ai_attendance.db"
+                engine = create_engine(
+                    DATABASE_URL,
+                    connect_args={"check_same_thread": False},
+                    echo=False
+                )
 
 SessionLocal = sessionmaker(
     autocommit=False,

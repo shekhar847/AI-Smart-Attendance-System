@@ -19,8 +19,33 @@ logger = logging.getLogger("uvicorn")
 os.makedirs("uploads/students", exist_ok=True)
 os.makedirs("uploads/temp", exist_ok=True)
 
+import app.models  # Register all SQLAlchemy models in Base.metadata
+
 Base.metadata.create_all(bind=engine)
 migrate_db()
+
+# Auto-seed admins
+try:
+    from app.models.admin_model import Admin
+    from app.services.auth_service import hash_password
+    db = SessionLocal()
+    if not db.query(Admin).first():
+        print("[INFO] No admins found, seeding default admins...")
+        admins_to_seed = [
+            {"name": "Administrator", "email": "admin@gmail.com", "password": "admin123"},
+            {"name": "Shekhar", "email": "shekhar32542@gmail.com", "password": "admin123"},
+        ]
+        for data in admins_to_seed:
+            admin = Admin(
+                name=data["name"],
+                email=data["email"],
+                password=hash_password(data["password"])
+            )
+            db.add(admin)
+        db.commit()
+    db.close()
+except Exception as e:
+    print(f"[WARNING] Failed to auto-seed admins: {e}")
 
 
 # =========================================================
