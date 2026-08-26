@@ -17,7 +17,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { getAlertSettings, updateAlertSettings, triggerAlertsNow, testSendAlert, getAlertLogs } from "../../api/alertApi";
-import Topbar from "../../components/Topbar";
+import DashboardLayout from "../../layouts/DashboardLayout";
 import Card from "../../components/Card";
 import Button from "../../components/Button";
 
@@ -157,10 +157,8 @@ function AlertSettings() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pl-0 lg:pl-72 transition-all">
-      <Topbar title="Automated Parent Alerts (SMS / WhatsApp)" />
-
-      <main className="p-6 max-w-7xl mx-auto space-y-6">
+    <DashboardLayout>
+      <main className="max-w-7xl mx-auto space-y-6">
         {/* Banner */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-6 md:p-8 text-white shadow-xl">
           <div className="absolute right-0 top-0 h-full w-1/3 bg-white/5 backdrop-blur-3xl transform skew-x-12 pointer-events-none" />
@@ -599,7 +597,7 @@ function AlertSettings() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardLayout>
   );
 }
 
