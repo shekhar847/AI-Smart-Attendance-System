@@ -165,11 +165,13 @@ def upload_student_photo(
     encoding = generate_face_encoding(filepath)
 
     if not encoding:
-        os.remove(filepath)
-        raise HTTPException(
-            status_code=400,
-            detail="No face detected in image or AI service is unavailable"
-        )
+        print("[Warning] Face encoding failed or AI service unavailable. Saving photo without encoding.")
+        student.photo = filepath
+        db.commit()
+        return {
+            "message": "Photo uploaded successfully (AI Encoding skipped)",
+            "photo": filepath
+        }
 
     student.photo = filepath
     student.face_encoding = encoding
