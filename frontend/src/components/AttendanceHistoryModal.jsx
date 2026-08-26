@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { createPortal } from "react-dom";
 import API from "../api/client";
 
 function AttendanceHistoryModal({
@@ -8,7 +9,7 @@ function AttendanceHistoryModal({
 }) {
   if (!open || !data) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 overflow-y-auto">
       <div className="my-auto max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 shadow-2xl">
 
@@ -181,7 +182,8 @@ function AttendanceHistoryModal({
 
       </div>
 
-    </div>
+    </div>,
+    document.body
   );
 }
 

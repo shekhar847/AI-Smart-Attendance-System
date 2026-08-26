@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import {
   X,
   TriangleAlert,
@@ -12,7 +13,7 @@ function DeleteModal({
 }) {
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
       <div className="w-full max-w-md rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-7 shadow-2xl">
 
@@ -82,8 +83,8 @@ function DeleteModal({
         </div>
 
       </div>
-
-    </div>
+    </div>,
+    document.body
   );
 }
 
