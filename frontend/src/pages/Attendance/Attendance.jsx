@@ -38,6 +38,7 @@ function Attendance() {
   const canvasRef = useRef(null);
 
   // Prevent multiple API requests at same time
+  const isRecognizingRef = useRef(false);
   const detectingRef = useRef(false);
 
   // Timeout reference
@@ -290,7 +291,7 @@ function Attendance() {
     // --------------------------------------
     // Prevent duplicate requests
     // --------------------------------------
-    if (detectingRef.current) {
+    if (isRecognizingRef.current) {
 
       console.log(
         "Previous recognition still running..."
@@ -298,6 +299,11 @@ function Attendance() {
 
       return;
 
+    }
+
+    if (!detectingRef.current) {
+      console.log("No face detected, skipping API call...");
+      return;
     }
 
 
@@ -320,7 +326,7 @@ function Attendance() {
 
     try {
 
-      detectingRef.current = true;
+      isRecognizingRef.current = true;
 
       setLoading(true);
 
@@ -510,7 +516,7 @@ function Attendance() {
 
     } finally {
 
-      detectingRef.current = false;
+      isRecognizingRef.current = false;
 
       setLoading(false);
 
@@ -606,6 +612,7 @@ function Attendance() {
 
     setScanning(false);
 
+    isRecognizingRef.current = false;
     detectingRef.current = false;
 
     setLoading(false);
