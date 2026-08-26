@@ -63,7 +63,7 @@ def recognize_face(image_path: str, db_or_students):
             matched = face_recognition.compare_faces(
                 [known_encoding],
                 unknown_encoding,
-                tolerance=0.55
+                tolerance=0.6
             )
 
             if matched[0]:

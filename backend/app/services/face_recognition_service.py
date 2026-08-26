@@ -97,7 +97,7 @@ def recognize_face(image_path, students):
                 },
                 data={
                     "known_students_json": known_students_json,
-                    "tolerance": "0.5"
+                    "tolerance": "0.6"
                 },
                 timeout=60.0
             )
