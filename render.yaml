@@ -13,3 +13,11 @@ services:
         value: "true"
       - key: SECRET_KEY
         value: supersecretkey123
+      - key: AI_SERVICE_URL
+        value: http://ai-attendance-ai-service:5000
+
+  - type: web
+    name: ai-attendance-ai-service
+    env: docker
+    region: singapore
+    rootDir: ai-service
