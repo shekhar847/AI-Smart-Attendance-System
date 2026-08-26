@@ -47,6 +47,15 @@ def generate_face_encoding(image_path):
 
         return json.dumps(encoding)
 
+    except httpx.ConnectError:
+        print("[AI Microservice Notice] AI Service is not running on", AI_SERVICE_URL)
+        print("[Fallback] Running local face encoding engine...")
+        try:
+            from app.services.face_service import generate_face_encoding as local_generate_face_encoding
+            return local_generate_face_encoding(image_path)
+        except Exception as fallback_err:
+            print("Local fallback face encoding error:", fallback_err)
+            return None
     except Exception as e:
         print("AI Service Connection Error:", e)
         return None

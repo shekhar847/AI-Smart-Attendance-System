@@ -2,10 +2,7 @@ from fastapi import UploadFile, File
 import shutil
 import os
 import json
-try:
-    import face_recognition
-except ImportError:
-    face_recognition = None
+from app.services.face_recognition_service import generate_face_encoding
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -165,30 +162,17 @@ def upload_student_photo(
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    if face_recognition is None:
-        student.photo = filepath
-        db.commit()
-        return {
-            "message": "Photo uploaded successfully",
-            "photo": filepath
-        }
+    encoding = generate_face_encoding(filepath)
 
-    image = face_recognition.load_image_file(filepath)
-
-    encodings = face_recognition.face_encodings(image)
-
-    if len(encodings) == 0:
+    if not encoding:
         os.remove(filepath)
-
         raise HTTPException(
             status_code=400,
-            detail="No face detected in image"
+            detail="No face detected in image or AI service is unavailable"
         )
 
     student.photo = filepath
-    student.face_encoding = json.dumps(
-        encodings[0].tolist()
-    )
+    student.face_encoding = encoding
 
     db.commit()
 
