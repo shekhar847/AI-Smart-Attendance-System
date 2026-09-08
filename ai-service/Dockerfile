@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
+# Limit CMake parallel jobs to prevent OOM errors during dlib build
+ENV CMAKE_BUILD_PARALLEL_LEVEL=1
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .

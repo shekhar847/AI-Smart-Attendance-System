@@ -1,3 +1,4 @@
+
 # 🤖 AI Smart Attendance System
 
 An end-to-end, state-of-the-art **AI-Powered Smart Attendance System** featuring real-time facial recognition, automated attendance logging, student & teacher management, multi-camera tracking, comprehensive reporting dashboards, notification center, dark/light theme support, and JWT authentication.
