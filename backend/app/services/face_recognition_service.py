@@ -6,7 +6,7 @@ import httpx
 AI_SERVICE_URL = os.getenv(
     "AI_SERVICE_URL",
     "http://localhost:5000"
-)
+).rstrip("/")
 
 
 def generate_face_encoding(image_path):
