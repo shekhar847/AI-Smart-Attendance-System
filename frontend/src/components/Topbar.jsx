@@ -699,7 +699,7 @@ function Topbar({ onToggleSidebar }) {
 
             </div>
 
-            <div className="text-left">
+            <div className="text-left hidden sm:block">
 
               <h3 className="font-semibold text-slate-900 dark:text-slate-100">
                 {admin?.name ||
