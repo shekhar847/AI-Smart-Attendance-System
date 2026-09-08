@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 
-import { getTeachers } from "../../api/teacherApi";
+import { getTeachers, addTeacher, updateTeacher } from "../../api/teacherApi";
+import TeacherModal from "../../components/TeacherModal";
 
 function Teachers() {
 
   const [teachers, setTeachers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingTeacher, setEditingTeacher] = useState(null);
 
   const loadTeachers = async () => {
     try {
@@ -21,6 +24,22 @@ function Teachers() {
     loadTeachers();
   }, []);
 
+  const handleSave = async (teacherData) => {
+    try {
+      if (editingTeacher) {
+        await updateTeacher(editingTeacher.id, teacherData);
+      } else {
+        await addTeacher(teacherData);
+      }
+      setShowModal(false);
+      setEditingTeacher(null);
+      loadTeachers();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save teacher. " + (err.response?.data?.detail || err.message));
+    }
+  };
+
   return (
     <DashboardLayout>
 
@@ -28,7 +47,13 @@ function Teachers() {
         <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
           Teachers
         </h1>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/30">
+        <button 
+          onClick={() => {
+            setEditingTeacher(null);
+            setShowModal(true);
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/30"
+        >
           Add Teacher
         </button>
       </div>
@@ -78,6 +103,13 @@ function Teachers() {
 
         </table>
       </div>
+
+      <TeacherModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSave={handleSave}
+        teacher={editingTeacher}
+      />
 
     </DashboardLayout>
   );
