@@ -68,7 +68,7 @@ def recognize_face(image_path: str, db_or_students):
 
             if matched[0]:
                 print(f"[RECOGNITION SUCCESS] Matched Student: {student.name} (Roll: {student.roll})")
-                return student
+                return {"student": student, "emotion_status": "Neutral"}
 
         print("[Face Engine] Face did not match any registered student encodings.")
         return None
