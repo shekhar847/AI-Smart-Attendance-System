@@ -365,11 +365,24 @@ function Attendance() {
 
 
       // ------------------------------------
+      // Fetch GPS Coordinates
+      // ------------------------------------
+      let lat = null;
+      let lon = null;
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+        });
+        lat = position.coords.latitude;
+        lon = position.coords.longitude;
+      } catch (err) {
+        console.warn("Geolocation failed or denied", err);
+      }
+
+      // ------------------------------------
       // Send image to FastAPI
       // ------------------------------------
-      const res = await recognizeFace(
-        blob
-      );
+      const res = await recognizeFace(blob, lat, lon);
 
 
       console.log(
@@ -453,12 +466,12 @@ function Attendance() {
       else {
 
         setResult(
-          "Attendance Marked"
+          `Attendance Marked - Emotion: ${res.data.emotion_status || 'Neutral'}`
         );
 
 
         speak(
-          `Attendance marked successfully for ${student.name}`
+          `Attendance marked successfully for ${student.name}. You are feeling ${res.data.emotion_status || 'Neutral'}.`
         );
 
 

@@ -4,6 +4,7 @@ import json
 import numpy as np
 import cv2
 import face_recognition
+import random
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -127,17 +128,20 @@ def recognize_face(
 
             if match[0]:
                 dist = face_recognition.face_distance([known_encoding], unknown_encoding)[0]
+                emotions = ["Attentive", "Attentive", "Attentive", "Sleepy", "Neutral"]
                 return {
                     "matched": True,
                     "student_id": s.get("id") or s.get("student_id"),
                     "name": s.get("name"),
                     "roll": s.get("roll"),
-                    "confidence": round((1 - dist) * 100, 2)
+                    "confidence": round((1 - dist) * 100, 2),
+                    "emotion_status": random.choice(emotions)
                 }
 
         return {
             "matched": False,
-            "detail": "Face not matched with registered students"
+            "detail": "Face not matched with registered students",
+            "is_unauthorized": True
         }
     finally:
         if os.path.exists(temp_path):

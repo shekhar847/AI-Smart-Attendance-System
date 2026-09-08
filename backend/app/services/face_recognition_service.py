@@ -126,16 +126,19 @@ def recognize_face(image_path, students):
                 "Face not matched:",
                 data.get("detail")
             )
+            if data.get("is_unauthorized"):
+                return {"unauthorized": True}
             return None
 
         matched_id = data.get("student_id")
+        emotion_status = data.get("emotion_status", "Neutral")
 
         if not matched_id:
             return None
 
         for student in students:
             if student.id == matched_id:
-                return student
+                return {"student": student, "emotion_status": emotion_status}
 
         return None
 

@@ -155,8 +155,9 @@ app.include_router(attendance_router)
 app.include_router(dashboard_router)
 app.include_router(report_router)
 app.include_router(auth_router)
-app.include_router(admin_router)
-app.include_router(alert_router)
+from app.routes.admin_route import router as admin_router
+from app.routes.alert_routes import router as alert_router
+from app.routes.behavioral_routes import router as behavioral_router
 
 app.include_router(report_filter_route.router)
 app.include_router(monthly_report_route.router)
@@ -164,6 +165,7 @@ app.include_router(best_student_route.router)
 
 app.include_router(camera_router)
 app.include_router(notification_router)
+app.include_router(behavioral_router)
 
 
 # =========================================================

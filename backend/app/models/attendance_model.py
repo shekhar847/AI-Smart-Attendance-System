@@ -21,3 +21,8 @@ class Attendance(Base):
         String(20),
         default="Present"
     )
+
+    emotion_status = Column(String(50), nullable=True, default="Neutral")
+    latitude = Column(String(50), nullable=True)
+    longitude = Column(String(50), nullable=True)
+    is_location_verified = Column(Integer, default=0)  # 1 for verified, 0 for not verified

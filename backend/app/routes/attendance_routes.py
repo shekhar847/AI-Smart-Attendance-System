@@ -12,6 +12,15 @@ from app.models.student_model import Student
 from app.schemas.attendance_schema import Attendance as AttendanceSchema
 
 from app.services.face_recognition_service import recognize_face
+from app.utils.geo_utils import haversine
+from app.models.unauthorized_entry_model import UnauthorizedEntry
+from fastapi import Form
+import random
+
+# Mock classroom coordinates (e.g., center of the institute)
+CLASSROOM_LAT = 28.6139 
+CLASSROOM_LON = 77.2090
+ALLOWED_RADIUS_METERS = 50
 
 router = APIRouter(
     prefix="/attendance",
@@ -40,7 +49,10 @@ def mark_attendance(
         student_id=attendance.student_id,
         date=attendance.date,
         time=attendance.time,
-        status=attendance.status
+        status=attendance.status,
+        emotion_status=attendance.emotion_status,
+        latitude=attendance.latitude,
+        longitude=attendance.longitude
     )
 
     db.add(new_record)
@@ -59,6 +71,8 @@ def mark_attendance(
 @router.post("/recognize")
 def recognize_student(
     file: UploadFile = File(...),
+    latitude: str = Form(None),
+    longitude: str = Form(None),
     db: Session = Depends(get_db)
 ):
 
@@ -76,13 +90,35 @@ def recognize_student(
 
         students = db.query(Student).all()
 
-        student = recognize_face(temp_path, students)
+        result = recognize_face(temp_path, students)
 
-        if student is None:
+        if result is None:
             raise HTTPException(
                 status_code=404,
                 detail="Face not recognized"
             )
+
+        if result.get("unauthorized"):
+            # Log unauthorized entry
+            entry = UnauthorizedEntry(
+                image_path=filename,
+                notes="Unauthorized face detected during attendance"
+            )
+            db.add(entry)
+            db.commit()
+            raise HTTPException(
+                status_code=403,
+                detail="Unauthorized face detected and logged"
+            )
+        
+        student = result["student"]
+        emotion_status = result["emotion_status"]
+        
+        is_verified = 0
+        if latitude and longitude:
+            dist = haversine(CLASSROOM_LON, CLASSROOM_LAT, longitude, latitude)
+            if dist <= ALLOWED_RADIUS_METERS:
+                is_verified = 1
 
         today = datetime.now().date()
 
@@ -108,7 +144,11 @@ def recognize_student(
             student_id=student.id,
             date=today,
             time=datetime.now().time(),
-            status="Present"
+            status="Present",
+            emotion_status=emotion_status,
+            latitude=latitude,
+            longitude=longitude,
+            is_location_verified=is_verified
         )
 
         db.add(attendance)
@@ -118,6 +158,8 @@ def recognize_student(
         return {
             "message": "Attendance Marked Successfully",
             "attendance_id": attendance.id,
+            "emotion_status": emotion_status,
+            "is_location_verified": bool(is_verified),
             "student": {
                 "id": student.id,
                 "name": student.name,
