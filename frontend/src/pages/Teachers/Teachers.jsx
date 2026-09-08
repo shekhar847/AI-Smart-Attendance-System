@@ -24,9 +24,14 @@ function Teachers() {
   return (
     <DashboardLayout>
 
-      <h1 className="text-4xl font-bold mb-8 text-slate-900 dark:text-slate-100">
-        Teachers
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+          Teachers
+        </h1>
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/30">
+          Add Teacher
+        </button>
+      </div>
 
       <div className="overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
         <table className="w-full text-slate-800 dark:text-slate-100">
