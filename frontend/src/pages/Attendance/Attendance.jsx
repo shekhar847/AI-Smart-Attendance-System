@@ -134,19 +134,10 @@ function Attendance() {
     }
   };
   const detectFace = async () => {
-    if (
-      !modelsLoaded ||
-      !webcamRef.current ||
-      !canvasRef.current
-    ) {
-      return;
-    }
+    if (!webcamRef.current || !canvasRef.current || !webcamRef.current.video) return;
 
     const video = webcamRef.current.video;
-
-    if (!video || video.readyState !== 4) {
-      return;
-    }
+    if (video.readyState !== 4) return;
 
     try {
       const detections = await faceapi
@@ -174,6 +165,7 @@ function Attendance() {
         );
 
       const canvas = canvasRef.current;
+      if (!canvas) return;
 
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
