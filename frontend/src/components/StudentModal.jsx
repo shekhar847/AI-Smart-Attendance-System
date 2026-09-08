@@ -24,6 +24,10 @@ function StudentModal({
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isOtherDept, setIsOtherDept] = useState(false);
+  const [customDept, setCustomDept] = useState("");
+
+  const PREDEFINED_DEPTS = ["MCA", "B.Tech", "BCA", "MBA", "BBA"];
 
   useEffect(() => {
     if (!open) {
@@ -31,10 +35,15 @@ function StudentModal({
     }
 
     if (student) {
+      const dept = student.department || "";
+      const isCustom = dept && !PREDEFINED_DEPTS.includes(dept);
+      setIsOtherDept(isCustom);
+      setCustomDept(isCustom ? dept : "");
+
       setForm({
         name: student.name || "",
         roll: student.roll || "",
-        department: student.department || "",
+        department: isCustom ? "Other" : dept,
         year: student.year || "",
         email: student.email || "",
         parent_name: student.parent_name || "",
@@ -63,6 +72,8 @@ function StudentModal({
         password: "",
       });
 
+      setIsOtherDept(false);
+      setCustomDept("");
       setPhoto(null);
       setPhotoPreview(null);
     }
@@ -104,10 +115,12 @@ function StudentModal({
   const handleSave = () => {
     const newErrors = {};
 
+    const finalDept = form.department === "Other" ? customDept : form.department;
+
     if (!form.name.trim()) newErrors.name = "Full Name is required";
     if (!form.roll.trim()) newErrors.roll = "Roll Number is required";
-    if (!form.department.trim()) newErrors.department = "Department is required";
-    if (!form.year.trim()) newErrors.year = "Year is required";
+    if (!finalDept.trim()) newErrors.department = "Department is required";
+    if (!form.year.trim()) newErrors.year = "Semester is required";
     if (!student && !photo) newErrors.photo = "Student photo is required";
 
     if (Object.keys(newErrors).length > 0) {
@@ -119,6 +132,7 @@ function StudentModal({
 
     onSave({
       ...form,
+      department: finalDept,
       id: student?.id,
       photo: photo,
     });
@@ -184,24 +198,37 @@ function StudentModal({
               </label>
               <select
                 value={form.department}
-                onChange={(e) => setForm({ ...form, department: e.target.value })}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
+                  setIsOtherDept(val === "Other");
+                  if (val !== "Other") setCustomDept("");
+                }}
                 className={`w-full rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition ${
                   errors.department ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
                 }`}
               >
                 <option value="">Select Department</option>
-                <option value="BCA">BCA</option>
-                <option value="B.Tech">B.Tech</option>
-                <option value="MCA">MCA</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Information Technology">Information Technology</option>
+                {PREDEFINED_DEPTS.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+                <option value="Other">Other (Add Custom)</option>
               </select>
+              {isOtherDept && (
+                <input
+                  type="text"
+                  placeholder="Enter Course/Department Name"
+                  value={customDept}
+                  onChange={(e) => setCustomDept(e.target.value)}
+                  className="mt-3 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-600 dark:text-slate-100"
+                />
+              )}
               {errors.department && <p className="mt-1 text-xs text-red-500">{errors.department}</p>}
             </div>
 
             <div>
               <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Year *
+                Semester *
               </label>
               <select
                 value={form.year}
@@ -210,11 +237,16 @@ function StudentModal({
                   errors.year ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
                 }`}
               >
-                <option value="">Select Year</option>
-                <option value="1st Year">1st Year</option>
-                <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year">3rd Year</option>
-                <option value="Final Year">Final Year</option>
+                <option value="">Select Semester</option>
+                {Array.from({ length: 
+                  form.department === "MCA" || form.department === "MBA" ? 4 :
+                  form.department === "BCA" || form.department === "BBA" ? 6 : 
+                  8 // Default or B.Tech
+                }, (_, i) => (
+                  <option key={i + 1} value={`Semester ${i + 1}`}>
+                    Semester {i + 1}
+                  </option>
+                ))}
               </select>
               {errors.year && <p className="mt-1 text-xs text-red-500">{errors.year}</p>}
             </div>

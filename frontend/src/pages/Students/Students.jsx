@@ -783,7 +783,7 @@ function Students() {
                 </th>
 
                 <th className="px-6 py-4">
-                  Year
+                  Semester
                 </th>
 
                 <th className="px-6 py-4">

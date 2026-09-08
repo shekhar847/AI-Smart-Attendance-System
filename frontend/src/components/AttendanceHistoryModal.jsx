@@ -63,7 +63,7 @@ function AttendanceHistoryModal({
             </p>
 
             <p className="text-slate-600 dark:text-slate-300">
-              Year : {data.student.year}
+              Semester : {data.student.year}
             </p>
 
           </div>

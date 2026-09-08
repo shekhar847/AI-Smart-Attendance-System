@@ -144,7 +144,7 @@ function FaceRecognitionModal({ open, onClose }) {
                     <span className="font-bold text-slate-800 dark:text-slate-200">{student.department}</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-200/50 dark:border-slate-700/50 pb-1">
-                    <span className="text-slate-500">Academic Year</span>
+                    <span className="text-slate-500">Academic Semester</span>
                     <span className="font-bold text-slate-800 dark:text-slate-200">{student.year}</span>
                   </div>
                   <div className="flex justify-between">

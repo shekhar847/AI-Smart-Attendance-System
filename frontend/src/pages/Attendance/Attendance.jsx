@@ -955,7 +955,7 @@ function Attendance() {
                 <p className="text-slate-600 dark:text-slate-300">
 
                   <span className="font-semibold text-slate-900 dark:text-slate-100">
-                    Year:
+                    Semester:
                   </span>{" "}
 
                   {studentData.year}

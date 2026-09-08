@@ -7,9 +7,11 @@ An end-to-end, state-of-the-art **AI-Powered Smart Attendance System** featuring
 ## 🌟 Key Features
 
 - 🤖 **AI Facial Recognition**: Real-time webcam face detection, landmark extraction, and 128-dimensional embedding matching using `face-api.js`, OpenCV, and `face_recognition`.
+- 🎭 **Emotion & Attention Tracking**: Real-time behavioral analytics tracking student engagement and emotional state during class.
+- 📍 **Geo-Fencing**: Location-based attendance validation to ensure students are actually present on campus.
 - 🗣️ **Text-to-Speech Feedback**: Voice confirmation upon successful attendance verification.
 - 🌙 **Dark & Light Mode**: Toggleable theme with tailored dark aesthetics across all pages, cards, tables, navigation bars, and modals.
-- 👥 **Student & Teacher Management**: Complete CRUD operations for students and teachers, photo enrollment, roll numbers, departments, and academic years.
+- 👥 **Student & Teacher Management**: Complete CRUD operations for students and teachers with an interactive **Teacher Management Portal** for easy onboarding, photo enrollment, roll numbers, departments, and academic years.
 - 📊 **Analytics & Interactive Reports**: Summary metrics, daily/monthly breakdown charts (Recharts), best student highlights, date-range filters, and 1-click **Excel (`xlsx`)** & **PDF (`jspdf`)** report exports.
 - 📹 **Multi-Camera Management**: Stream, register, and manage multiple camera feeds across campus locations.
 - 🔔 **Notification Center**: Real-time notifications drawer for mark-as-read and notification filtering.
