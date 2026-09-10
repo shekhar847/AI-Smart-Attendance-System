@@ -147,6 +147,9 @@ def recognize_face(image_path, students):
             return local_recognize_face(image_path, students)
         except Exception as fallback_err:
             print("Local fallback face recognition error:", fallback_err)
-            return None
+            # Differentiate between a timeout/server error and a face not matching
+            if "timeout" in str(e).lower() or "connect" in str(e).lower():
+                 return {"error": "AI Service is sleeping or unavailable. Please wait 1-2 minutes and try again."}
+            return {"error": "AI Service error and fallback failed."}
 
 

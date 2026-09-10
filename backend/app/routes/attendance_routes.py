@@ -98,6 +98,12 @@ def recognize_student(
                 detail="Face not recognized"
             )
 
+        if "error" in result:
+            raise HTTPException(
+                status_code=503,
+                detail=result["error"]
+            )
+
         if result.get("unauthorized"):
             # Log unauthorized entry
             entry = UnauthorizedEntry(
