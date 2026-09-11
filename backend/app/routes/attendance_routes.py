@@ -127,15 +127,25 @@ def recognize_student(
                 is_verified = 1
 
         today = datetime.now().date()
+        now_time = datetime.now().time()
+        from datetime import time
+
+        # Determine attendance status based on slots
+        status = "Present"
+        if time(8, 0) <= now_time <= time(11, 0):
+            status = "CHECK-IN"
+        elif time(16, 0) <= now_time <= time(18, 0):
+            status = "CHECK-OUT"
 
         already = db.query(Attendance).filter(
             Attendance.student_id == student.id,
-            Attendance.date == today
+            Attendance.date == today,
+            Attendance.status == status
         ).first()
 
         if already:
             return {
-                "message": "Attendance already marked",
+                "message": f"Attendance already marked for {status}",
                 "student": {
                     "id": student.id,
                     "name": student.name,
@@ -149,12 +159,12 @@ def recognize_student(
         attendance = Attendance(
             student_id=student.id,
             date=today,
-            time=datetime.now().time(),
-            status="Present",
+            time=now_time,
+            status=status,
             emotion_status=emotion_status,
             latitude=latitude,
             longitude=longitude,
-            is_location_verified=is_verified
+            is_location_verified=is_location_verified if 'is_location_verified' in locals() else is_verified
         )
 
         db.add(attendance)
@@ -162,7 +172,7 @@ def recognize_student(
         db.refresh(attendance)
 
         return {
-            "message": "Attendance Marked Successfully",
+            "message": f"Attendance ({status}) Marked Successfully",
             "attendance_id": attendance.id,
             "emotion_status": emotion_status,
             "is_location_verified": bool(is_verified),
