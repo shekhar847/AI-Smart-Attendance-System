@@ -126,9 +126,12 @@ def recognize_student(
             if dist <= ALLOWED_RADIUS_METERS:
                 is_verified = 1
 
-        today = datetime.now().date()
-        now_time = datetime.now().time()
-        from datetime import time
+        from datetime import datetime, timezone, timedelta, time
+        IST = timezone(timedelta(hours=5, minutes=30))
+        now_ist = datetime.now(IST)
+
+        today = now_ist.date()
+        now_time = now_ist.time()
 
         # Determine attendance status based on slots
         status = "Present"
