@@ -113,8 +113,12 @@ function Students() {
         error.response?.data
       );
 
+      let errorDetail = error.response?.data?.detail;
+      if (Array.isArray(errorDetail)) {
+        errorDetail = errorDetail.map(err => err.msg).join("\n");
+      }
       alert(
-        error.response?.data?.detail ||
+        errorDetail ||
         "Unable to load students"
       );
 
@@ -309,11 +313,23 @@ function Students() {
       );
 
 
-      const message =
-        error.response?.data?.detail ||
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to save student";
+      let message = "Failed to save student";
+      if (error.response?.data?.detail) {
+        if (Array.isArray(error.response.data.detail)) {
+          message = error.response.data.detail.map(err => {
+            if (err.loc && err.loc.includes("email")) {
+              return "Please enter a valid email address";
+            }
+            return err.msg;
+          }).join("\n");
+        } else {
+          message = error.response.data.detail;
+        }
+      } else if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = error.message;
+      }
 
 
       alert(message);
@@ -377,8 +393,12 @@ function Students() {
       );
 
 
+      let errorDetail = error.response?.data?.detail;
+      if (Array.isArray(errorDetail)) {
+        errorDetail = errorDetail.map(err => err.msg).join("\n");
+      }
       alert(
-        error.response?.data?.detail ||
+        errorDetail ||
         "Failed to delete student"
       );
 
@@ -424,8 +444,12 @@ function Students() {
       );
 
 
+      let errorDetail = error.response?.data?.detail;
+      if (Array.isArray(errorDetail)) {
+        errorDetail = errorDetail.map(err => err.msg).join("\n");
+      }
       alert(
-        error.response?.data?.detail ||
+        errorDetail ||
         "Unable to load attendance history"
       );
 

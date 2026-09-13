@@ -45,7 +45,24 @@ function Teachers() {
       loadTeachers();
     } catch (err) {
       console.error(err);
-      alert("Failed to save teacher. " + (err.response?.data?.detail || err.message));
+      let message = "";
+      if (err.response?.data?.detail) {
+        if (Array.isArray(err.response.data.detail)) {
+          message = err.response.data.detail.map(e => {
+            if (e.loc && e.loc.includes("email")) {
+              return "Please enter a valid email address";
+            }
+            return e.msg;
+          }).join("\n");
+        } else {
+          message = err.response.data.detail;
+        }
+      } else if (err.response?.data?.message) {
+        message = err.response.data.message;
+      } else if (err.message) {
+        message = err.message;
+      }
+      alert("Failed to save teacher. " + message);
     }
   };
 
