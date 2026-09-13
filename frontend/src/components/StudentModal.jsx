@@ -132,7 +132,7 @@ function StudentModal({
 
         const detections = await faceapi.detectAllFaces(
           img,
-          new faceapi.TinyFaceDetectorOptions()
+          new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.3 })
         );
 
         if (detections.length === 0) {
