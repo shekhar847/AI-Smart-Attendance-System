@@ -30,6 +30,9 @@ def generate_face_encoding(image_path):
                 timeout=60.0
             )
 
+        if response.status_code == 400:
+            return {"error": "no_face"}
+
         if response.status_code != 200:
             print(
                 "AI Service Encoding Error:",
@@ -43,7 +46,7 @@ def generate_face_encoding(image_path):
         encoding = data.get("face_encoding")
 
         if not encoding:
-            return None
+            return {"error": "no_face"}
 
         return json.dumps(encoding)
 

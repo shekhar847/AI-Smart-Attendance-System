@@ -14,14 +14,12 @@ def generate_face_encoding(image_path: str):
 
     try:
         image = face_recognition.load_image_file(image_path)
-
         encodings = face_recognition.face_encodings(image)
 
         if len(encodings) == 0:
-            return None
+            return {"error": "no_face"}
 
         encoding = encodings[0]
-
         return json.dumps(encoding.tolist())
 
     except Exception as e:
