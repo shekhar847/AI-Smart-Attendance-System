@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import API from "../api/client";
 
 function TeacherModal({ open, onClose, onSave, teacher }) {
   const [form, setForm] = useState({
@@ -12,6 +13,8 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
     password: "",
   });
 
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -26,6 +29,13 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
         designation: teacher.designation || "",
         password: "",
       });
+      
+      setPhoto(null);
+      if (teacher.photo) {
+        setPhotoPreview(`${API.defaults.baseURL}/${teacher.photo}`);
+      } else {
+        setPhotoPreview(null);
+      }
     } else {
       setForm({
         name: "",
@@ -35,6 +45,8 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
         designation: "",
         password: "",
       });
+      setPhoto(null);
+      setPhotoPreview(null);
     }
 
     setErrors({});
@@ -48,6 +60,37 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
     }
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setErrors((prev) => ({
+        ...prev,
+        photo: "Please select a valid image file.",
+      }));
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors((prev) => ({
+        ...prev,
+        photo: "Image size must be less than 5 MB.",
+      }));
+      return;
+    }
+
+    setPhoto(file);
+    const previewUrl = URL.createObjectURL(file);
+    setPhotoPreview(previewUrl);
+
+    setErrors((prev) => ({
+      ...prev,
+      photo: "",
+    }));
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "Name is required";
@@ -56,6 +99,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
     if (!form.department.trim()) newErrors.department = "Department is required";
     if (!form.designation.trim()) newErrors.designation = "Designation is required";
     if (!teacher && !form.password.trim()) newErrors.password = "Password is required for new teachers";
+    // if (!teacher && !photo) newErrors.photo = "Teacher photo is required"; // Optional or required? Let's make it optional for now, or match student
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,8 +108,19 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      onSave(form);
+      onSave({
+        ...form,
+        id: teacher?.id,
+        photo: photo
+      });
     }
+  };
+
+  const handleClose = () => {
+    setErrors({});
+    setPhoto(null);
+    setPhotoPreview(null);
+    onClose();
   };
 
   if (!open) return null;
@@ -78,7 +133,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
             {teacher ? "Edit Teacher" : "Add New Teacher"}
           </h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
           >
             <X size={20} />
@@ -192,13 +247,46 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Teacher Photo
+              </label>
+              <label
+                className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-6 transition ${
+                  errors.photo
+                    ? "border-red-400 bg-red-50 dark:bg-red-950/40"
+                    : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30"
+                }`}
+              >
+                {photoPreview ? (
+                  <img
+                    src={photoPreview}
+                    alt="Teacher Preview"
+                    className="mb-3 h-28 w-28 rounded-full border-4 border-blue-500 object-cover shadow-lg"
+                  />
+                ) : (
+                  <div className="text-3xl">📷</div>
+                )}
+
+                <h3 className="mt-2 text-center text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  {photo ? photo.name : teacher?.photo ? "Current Photo" : "Upload Photo"}
+                </h3>
+                <p className="mt-1 text-center text-[11px] text-slate-500 dark:text-slate-400">
+                  Click to browse or drag & drop (JPG, PNG — Max 5 MB)
+                </p>
+
+                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+              </label>
+              {errors.photo && <p className="mt-2 text-xs font-medium text-red-500">{errors.photo}</p>}
+            </div>
           </form>
         </div>
 
         <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/30">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="px-5 py-2.5 rounded-xl font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             Cancel

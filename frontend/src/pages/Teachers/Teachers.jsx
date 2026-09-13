@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 
-import { getTeachers, addTeacher, updateTeacher } from "../../api/teacherApi";
+import { getTeachers, addTeacher, updateTeacher, uploadTeacherPhoto } from "../../api/teacherApi";
 import TeacherModal from "../../components/TeacherModal";
 
 function Teachers() {
@@ -26,11 +26,20 @@ function Teachers() {
 
   const handleSave = async (teacherData) => {
     try {
+      let teacherId;
+
       if (editingTeacher) {
         await updateTeacher(editingTeacher.id, teacherData);
+        teacherId = editingTeacher.id;
       } else {
-        await addTeacher(teacherData);
+        const response = await addTeacher(teacherData);
+        teacherId = response.data.id;
       }
+
+      if (teacherData.photo) {
+        await uploadTeacherPhoto(teacherId, teacherData.photo);
+      }
+
       setShowModal(false);
       setEditingTeacher(null);
       loadTeachers();

@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
+import os
+import shutil
 
 from app.config.database import get_db
 from app.models.teacher_model import Teacher
@@ -122,3 +124,31 @@ def get_teacher(
         raise HTTPException(status_code=404, detail="Teacher not found")
 
     return teacher
+
+@router.post("/{teacher_id}/upload-photo")
+def upload_teacher_photo(
+    teacher_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+
+    teacher = db.query(Teacher).filter(Teacher.id == teacher_id).first()
+
+    if not teacher:
+        raise HTTPException(status_code=404, detail="Teacher not found")
+
+    os.makedirs("uploads/teachers", exist_ok=True)
+
+    filename = f"{teacher.employee_id}_{file.filename}"
+    filepath = os.path.join("uploads/teachers", filename)
+
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    teacher.photo = filepath
+    db.commit()
+
+    return {
+        "message": "Photo uploaded successfully",
+        "photo": filepath
+    }

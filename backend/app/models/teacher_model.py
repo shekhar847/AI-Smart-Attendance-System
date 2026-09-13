@@ -12,3 +12,4 @@ class Teacher(Base):
     department = Column(String(100))
     designation = Column(String(100))
     password = Column(String(255), nullable=True)
+    photo = Column(String(255), nullable=True)
