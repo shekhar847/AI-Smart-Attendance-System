@@ -177,16 +177,18 @@ function Reports() {
   };
   const exportExcel = () => {
 
-    const excelData = dateReport.map((item) => ({
-      Student: item.name,
-      Roll: item.roll,
-      Department: item.department,
-      Date: item.date,
-      Time: item.time,
-      Status: item.status,
-    }));
+    const excelData = dateReport.length > 0 ? dateReport.map((item) => ({
+      Student: item.name || "-",
+      Roll: item.roll || "-",
+      Department: item.department || "-",
+      Date: item.date || "-",
+      Time: item.time || "-",
+      Status: item.status || "-",
+    })) : [{}]; // empty row if no data so headers still show up
 
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const worksheet = XLSX.utils.json_to_sheet(excelData, { 
+      header: ["Student", "Roll", "Department", "Date", "Time", "Status"] 
+    });
 
     const workbook = XLSX.utils.book_new();
 

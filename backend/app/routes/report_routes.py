@@ -39,7 +39,7 @@ def attendance_summary(db: Session = Depends(get_db)):
         db.query(func.count(func.distinct(Attendance.student_id)))
         .filter(
             Attendance.date == latest_date,
-            Attendance.status == "Present"
+            Attendance.status.in_(["Present", "CHECK-IN", "CHECK-OUT"])
         )
         .scalar()
     ) or 0
@@ -68,7 +68,7 @@ def daily_report(db: Session = Depends(get_db)):
             ).label("present")
         )
         .filter(
-            Attendance.status == "Present"
+            Attendance.status.in_(["Present", "CHECK-IN", "CHECK-OUT"])
         )
         .group_by(
             Attendance.date
