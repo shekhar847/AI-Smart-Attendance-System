@@ -119,19 +119,19 @@ function Cameras() {
             >
                 <div className="flex flex-wrap items-center gap-3">
 
-                    <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
-                        <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
+                    <div className="rounded-xl border border-blue-100 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-950/30 px-4 py-3">
+                        <p className="text-xs font-medium uppercase tracking-wide text-blue-600 dark:text-blue-400">
                             Total Cameras
                         </p>
 
-                        <h3 className="text-xl font-bold text-slate-900">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                             {cameras.length}
                         </h3>
 
                     </div>
 
                     <button
-                        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium transition hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md"
+                        className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-5 py-3 font-medium transition hover:-translate-y-0.5 hover:bg-slate-50 dark:hover:bg-slate-700 hover:shadow-md"
                     >
                         <Download size={18} />
                         Export
