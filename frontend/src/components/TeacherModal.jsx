@@ -222,7 +222,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                 className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                   errors.name ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                 }`}
-                placeholder="Enter teacher's name"
+                placeholder=""
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
@@ -239,7 +239,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                 className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                   errors.email ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                 }`}
-                placeholder="Enter email address"
+                placeholder=""
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
@@ -257,7 +257,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                   className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                     errors.employee_id ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                   }`}
-                  placeholder="e.g. FAC001"
+                  placeholder=""
                 />
                 {errors.employee_id && <p className="text-red-500 text-xs mt-1">{errors.employee_id}</p>}
               </div>
@@ -274,7 +274,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                   className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                     errors.department ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                   }`}
-                  placeholder="e.g. Computer Science"
+                  placeholder=""
                 />
                 {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
               </div>
@@ -293,7 +293,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                   className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                     errors.designation ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                   }`}
-                  placeholder="e.g. Assistant Professor"
+                  placeholder=""
                 />
                 {errors.designation && <p className="text-red-500 text-xs mt-1">{errors.designation}</p>}
               </div>
@@ -310,7 +310,7 @@ function TeacherModal({ open, onClose, onSave, teacher }) {
                   className={`w-full px-4 py-2 rounded-xl border bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                     errors.password ? "border-red-500" : "border-slate-200 dark:border-slate-700"
                   }`}
-                  placeholder="Enter password"
+                  placeholder=""
                 />
                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
