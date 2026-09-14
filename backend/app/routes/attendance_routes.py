@@ -93,10 +93,10 @@ def recognize_student(
         result = recognize_face(temp_path, students)
 
         if result is None:
-            raise HTTPException(
-                status_code=404,
-                detail="Face not recognized"
-            )
+            return {
+                "success": False,
+                "message": "Face not recognized"
+            }
 
         if "error" in result:
             raise HTTPException(

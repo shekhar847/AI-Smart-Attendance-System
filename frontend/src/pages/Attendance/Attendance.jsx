@@ -153,6 +153,7 @@ function Attendance() {
         height: video.videoHeight,
       };
 
+      if (!canvasRef.current) return;
       faceapi.matchDimensions(
         canvasRef.current,
         displaySize
@@ -409,6 +410,15 @@ function Attendance() {
         res.data
       );
 
+
+      if (res.data.success === false) {
+        setStudentData(null);
+        setResult(res.data.message || "Face not recognized");
+        clearResult(2500);
+        isRecognizingRef.current = false;
+        setLoading(false);
+        return;
+      }
 
       // ====================================
       // STUDENT DATA
