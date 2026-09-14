@@ -1,8 +1,58 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X, ChevronDown } from "lucide-react";
 import * as faceapi from "face-api.js";
 import API from "../api/client";
+
+const PREDEFINED_DEPTS = ["MCA", "B.Tech", "BCA", "MBA", "BBA"];
+
+const CustomSelect = ({ label, value, options, onChange, error, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (selectRef.current && !selectRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={selectRef}>
+      <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+        {label}
+      </label>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition flex justify-between items-center ${
+          error ? "border-red-500" : isOpen ? "border-blue-600 ring-1 ring-blue-600" : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
+        }`}
+      >
+        <span className={value ? "truncate" : "text-slate-400 truncate"}>{value || placeholder}</span>
+        <ChevronDown size={18} className={`text-slate-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? "-rotate-180" : ""}`} />
+      </div>
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-auto">
+          {options.map((opt, i) => (
+            <div 
+              key={i} 
+              onClick={() => { onChange(opt.value); setIsOpen(false); }}
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 ${value === opt.value ? "bg-blue-50 dark:bg-slate-700 text-blue-600 font-medium" : ""}`}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+    </div>
+  );
+};
 
 function StudentModal({
   open,
@@ -44,7 +94,6 @@ function StudentModal({
     }
   }, [open, faceapiLoaded]);
 
-  const PREDEFINED_DEPTS = ["MCA", "B.Tech", "BCA", "MBA", "BBA"];
 
   useEffect(() => {
     if (!open) {
@@ -261,33 +310,21 @@ function StudentModal({
             />
 
             <div>
-              <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Department *
-              </label>
-              <div className="relative">
-                <select
-                  value={form.department}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
-                    setIsOtherDept(val === "Other");
-                    if (val !== "Other") setCustomDept("");
-                    e.target.blur();
-                  }}
-                  className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
-                    errors.department ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
-                  }`}
-                >
-                  <option value="">Select Department</option>
-                  {PREDEFINED_DEPTS.map((d) => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                  <option value="Other">Other (Add Custom)</option>
-                </select>
-                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-slate-400 peer-focus:-rotate-180 transition-transform duration-200">
-                  <ChevronDown size={18} />
-                </div>
-              </div>
+              <CustomSelect
+                label="Department *"
+                placeholder="Select Department"
+                value={form.department}
+                onChange={(val) => {
+                  setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
+                  setIsOtherDept(val === "Other");
+                  if (val !== "Other") setCustomDept("");
+                }}
+                error={errors.department}
+                options={[
+                  ...PREDEFINED_DEPTS.map(d => ({ label: d, value: d })),
+                  { label: "Other (Add Custom)", value: "Other" }
+                ]}
+              />
               {isOtherDept && (
                 <input
                   type="text"
@@ -301,36 +338,18 @@ function StudentModal({
             </div>
 
             <div>
-              <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Semester *
-              </label>
-              <div className="relative">
-                <select
-                  value={form.year}
-                  onChange={(e) => {
-                    setForm({ ...form, year: e.target.value });
-                    e.target.blur();
-                  }}
-                  className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
-                    errors.year ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
-                  }`}
-                >
-                  <option value="">Select Semester</option>
-                  {Array.from({ length: 
-                    form.department === "MCA" || form.department === "MBA" ? 4 :
-                    form.department === "BCA" || form.department === "BBA" ? 6 : 
-                    8 // Default or B.Tech
-                  }, (_, i) => (
-                    <option key={i + 1} value={`Semester ${i + 1}`}>
-                      Semester {i + 1}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-slate-400 peer-focus:-rotate-180 transition-transform duration-200">
-                  <ChevronDown size={18} />
-                </div>
-              </div>
-              {errors.year && <p className="mt-1 text-xs text-red-500">{errors.year}</p>}
+              <CustomSelect
+                label="Semester *"
+                placeholder="Select Semester"
+                value={form.year}
+                onChange={(val) => setForm({ ...form, year: val })}
+                error={errors.year}
+                options={Array.from({ length: 
+                  form.department === "MCA" || form.department === "MBA" ? 4 :
+                  form.department === "BCA" || form.department === "BBA" ? 6 : 
+                  8 // Default or B.Tech
+                }, (_, i) => ({ label: `Semester ${i + 1}`, value: `Semester ${i + 1}` }))}
+              />
             </div>
 
             <Input
