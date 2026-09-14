@@ -77,6 +77,7 @@ function StudentModal({
   const [errors, setErrors] = useState({});
   const [isOtherDept, setIsOtherDept] = useState(false);
   const [customDept, setCustomDept] = useState("");
+  const [appendPhoto, setAppendPhoto] = useState(true);
   const [isDetectingFace, setIsDetectingFace] = useState(false);
   const [faceapiLoaded, setFaceapiLoaded] = useState(false);
 
@@ -252,6 +253,7 @@ function StudentModal({
       department: finalDept,
       id: student?.id,
       photo: photo,
+      appendPhoto,
     });
   };
 
@@ -440,6 +442,20 @@ function StudentModal({
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
           </label>
           {errors.photo && <p className="mt-2 text-xs font-medium text-red-500">{errors.photo}</p>}
+          {student && student.photo && photo && (
+            <div className="mt-3 flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="appendPhoto"
+                checked={appendPhoto}
+                onChange={(e) => setAppendPhoto(e.target.checked)}
+                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="appendPhoto" className="text-sm text-slate-700 dark:text-slate-300">
+                Keep previous face profile (Append new photo instead of replacing)
+              </label>
+            </div>
+          )}
         </div>
 
         {/* BUTTONS */}

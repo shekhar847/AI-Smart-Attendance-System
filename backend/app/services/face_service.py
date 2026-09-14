@@ -53,18 +53,22 @@ def recognize_face(image_path: str, db_or_students):
 
             if not student.face_encoding:
                 continue
-
-            known_encoding = np.array(
-                json.loads(student.face_encoding)
-            )
+                
+            parsed_encodings = json.loads(student.face_encoding)
+            
+            # Legacy: single encoding (1D list) or New: multiple encodings (2D list)
+            if len(parsed_encodings) > 0 and not isinstance(parsed_encodings[0], list):
+                known_encodings = [np.array(parsed_encodings)]
+            else:
+                known_encodings = [np.array(e) for e in parsed_encodings]
 
             matched = face_recognition.compare_faces(
-                [known_encoding],
+                known_encodings,
                 unknown_encoding,
                 tolerance=0.6
             )
 
-            if matched[0]:
+            if any(matched):
                 print(f"[RECOGNITION SUCCESS] Matched Student: {student.name} (Roll: {student.roll})")
                 return {"student": student, "emotion_status": "Neutral"}
 
