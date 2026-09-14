@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
+import { createPortal } from "react-dom";
 import {
   Bell,
   Search,
@@ -794,7 +794,7 @@ function Topbar({ onToggleSidebar }) {
       {/* =========================================================
           MY PROFILE MODAL
       ========================================================= */}
-      {showProfileModal && (
+      {showProfileModal && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl transition-all text-slate-800 dark:text-slate-100">
             
@@ -872,7 +872,8 @@ function Topbar({ onToggleSidebar }) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
