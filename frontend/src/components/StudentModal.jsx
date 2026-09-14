@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import * as faceapi from "face-api.js";
 import API from "../api/client";
 
@@ -264,24 +264,29 @@ function StudentModal({
               <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Department *
               </label>
-              <select
-                value={form.department}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
-                  setIsOtherDept(val === "Other");
-                  if (val !== "Other") setCustomDept("");
-                }}
-                className={`w-full rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition ${
-                  errors.department ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
-                }`}
-              >
-                <option value="">Select Department</option>
-                {PREDEFINED_DEPTS.map((d) => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
-                <option value="Other">Other (Add Custom)</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={form.department}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
+                    setIsOtherDept(val === "Other");
+                    if (val !== "Other") setCustomDept("");
+                  }}
+                  className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
+                    errors.department ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
+                  }`}
+                >
+                  <option value="">Select Department</option>
+                  {PREDEFINED_DEPTS.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                  <option value="Other">Other (Add Custom)</option>
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-slate-400 peer-focus:-rotate-180 transition-transform duration-200">
+                  <ChevronDown size={18} />
+                </div>
+              </div>
               {isOtherDept && (
                 <input
                   type="text"
@@ -298,24 +303,29 @@ function StudentModal({
               <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Semester *
               </label>
-              <select
-                value={form.year}
-                onChange={(e) => setForm({ ...form, year: e.target.value })}
-                className={`w-full rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition ${
-                  errors.year ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
-                }`}
-              >
-                <option value="">Select Semester</option>
-                {Array.from({ length: 
-                  form.department === "MCA" || form.department === "MBA" ? 4 :
-                  form.department === "BCA" || form.department === "BBA" ? 6 : 
-                  8 // Default or B.Tech
-                }, (_, i) => (
-                  <option key={i + 1} value={`Semester ${i + 1}`}>
-                    Semester {i + 1}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={form.year}
+                  onChange={(e) => setForm({ ...form, year: e.target.value })}
+                  className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
+                    errors.year ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
+                  }`}
+                >
+                  <option value="">Select Semester</option>
+                  {Array.from({ length: 
+                    form.department === "MCA" || form.department === "MBA" ? 4 :
+                    form.department === "BCA" || form.department === "BBA" ? 6 : 
+                    8 // Default or B.Tech
+                  }, (_, i) => (
+                    <option key={i + 1} value={`Semester ${i + 1}`}>
+                      Semester {i + 1}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center text-slate-400 peer-focus:-rotate-180 transition-transform duration-200">
+                  <ChevronDown size={18} />
+                </div>
+              </div>
               {errors.year && <p className="mt-1 text-xs text-red-500">{errors.year}</p>}
             </div>
 
