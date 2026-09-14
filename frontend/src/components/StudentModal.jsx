@@ -272,6 +272,7 @@ function StudentModal({
                     setForm({ ...form, department: val, year: "" }); // Reset semester on dept change
                     setIsOtherDept(val === "Other");
                     if (val !== "Other") setCustomDept("");
+                    e.target.blur();
                   }}
                   className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
                     errors.department ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
@@ -306,7 +307,10 @@ function StudentModal({
               <div className="relative">
                 <select
                   value={form.year}
-                  onChange={(e) => setForm({ ...form, year: e.target.value })}
+                  onChange={(e) => {
+                    setForm({ ...form, year: e.target.value });
+                    e.target.blur();
+                  }}
                   className={`peer appearance-none w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 pr-10 text-sm outline-none transition ${
                     errors.year ? "border-red-500" : "border-slate-300 dark:border-slate-700 focus:border-blue-600"
                   }`}
