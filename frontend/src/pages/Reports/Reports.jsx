@@ -536,7 +536,7 @@ function Reports() {
             <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
 
               <th className="py-3 text-left">Student</th>
-              <th className="py-3 text-left">Roll</th>
+              <th className="py-3 text-left">Student ID</th>
               <th className="py-3 text-left">Department</th>
               <th className="py-3 text-left">Date</th>
               <th className="py-3 text-left">Time</th>

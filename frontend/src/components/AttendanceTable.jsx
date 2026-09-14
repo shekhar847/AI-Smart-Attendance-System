@@ -85,7 +85,7 @@ function AttendanceTable() {
           <thead>
             <tr className="border-b border-slate-200/60 dark:border-slate-800/60 bg-slate-100/50 dark:bg-slate-900/50 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <th className="px-7 py-4">Student Profile</th>
-              <th className="px-6 py-4">Roll Number</th>
+              <th className="px-6 py-4">Student ID</th>
               <th className="px-6 py-4">Date</th>
               <th className="px-6 py-4">Verification Time</th>
               <th className="px-7 py-4 text-right">AI Status</th>

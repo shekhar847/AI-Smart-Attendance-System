@@ -219,7 +219,7 @@ function Login() {
                       ? "Admin Email Address"
                       : activeRole === "teacher"
                       ? "Teacher Email or Employee ID"
-                      : "Student Roll Number or Email"}
+                      : "Student ID or Email"}
                   </label>
                   <Input
                     type="text"
@@ -228,7 +228,7 @@ function Login() {
                         ? "admin@gmail.com"
                         : activeRole === "teacher"
                         ? "teacher@gmail.com or EMP001"
-                        : "Roll No. e.g. CS101 or email"
+                        : "Student ID e.g. CS101 or email"
                     }
                     icon={Mail}
                     value={identifier}
@@ -248,7 +248,7 @@ function Login() {
                           ? "Enter your admin password"
                           : activeRole === "teacher"
                           ? "Enter password (Default: Employee ID)"
-                          : "Enter password (Default: Roll Number)"
+                          : "Enter password (Default: Student ID)"
                       }
                       icon={Lock}
                       value={password}
