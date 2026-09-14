@@ -781,7 +781,7 @@ function Students() {
 
         <input
           type="text"
-          placeholder="Search by name or roll number..."
+          placeholder="Search by name or student ID..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
@@ -865,7 +865,7 @@ function Students() {
                 </th>
 
                 <th className="px-6 py-4">
-                  Roll No
+                  Student ID
                 </th>
 
                 <th className="px-6 py-4">

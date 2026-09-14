@@ -186,7 +186,7 @@ function StudentModal({
     const finalDept = form.department === "Other" ? customDept : form.department;
 
     if (!form.name.trim()) newErrors.name = "Full Name is required";
-    if (!form.roll.trim()) newErrors.roll = "Roll Number is required";
+    if (!form.roll.trim()) newErrors.roll = "Student ID is required";
     if (!finalDept.trim()) newErrors.department = "Department is required";
     if (!form.year.trim()) newErrors.year = "Semester is required";
     if (!student && !photo) newErrors.photo = "Student photo is required";
@@ -246,15 +246,15 @@ function StudentModal({
           <div className="grid gap-4 md:grid-cols-2">
             <Input
               label="Student Full Name *"
-              placeholder="Rahul Kumar"
+              placeholder=""
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={errors.name}
             />
 
             <Input
-              label="Roll Number *"
-              placeholder="CS101"
+              label="Student ID *"
+              placeholder=""
               value={form.roll}
               onChange={(e) => setForm({ ...form, roll: e.target.value })}
               error={errors.roll}
@@ -321,16 +321,16 @@ function StudentModal({
 
             <Input
               label="Student Email"
-              placeholder="rahul@gmail.com"
+              placeholder=""
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               error={errors.email}
             />
 
             <Input
-              label="Portal Password"
-              placeholder={student ? "Leave blank to keep unchanged" : "Default: Roll Number"}
-              type="password"
+              label="Roll Number"
+              placeholder=""
+              type="text"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               error={errors.password}
@@ -346,21 +346,21 @@ function StudentModal({
           <div className="grid gap-4 md:grid-cols-3">
             <Input
               label="Parent / Guardian Name"
-              placeholder="Ramesh Kumar"
+              placeholder=""
               value={form.parent_name}
               onChange={(e) => setForm({ ...form, parent_name: e.target.value })}
             />
 
             <Input
               label="Parent Phone / WhatsApp Number *"
-              placeholder="+91 9876543210"
+              placeholder=""
               value={form.parent_phone}
               onChange={(e) => setForm({ ...form, parent_phone: e.target.value })}
             />
 
             <Input
               label="Parent Email Address"
-              placeholder="parent@gmail.com"
+              placeholder=""
               value={form.parent_email}
               onChange={(e) => setForm({ ...form, parent_email: e.target.value })}
             />
