@@ -78,6 +78,7 @@ function Reports() {
       const dailyRes = await getDailyReport();
       const monthlyRes = await getMonthlyReport();
       const bestRes = await getBestStudent();
+      const dateRangeRes = await getDateRangeReport(today, today);
 
       console.log("Daily =>", dailyRes.data);
       console.log("Monthly =>", monthlyRes.data);
@@ -87,6 +88,7 @@ function Reports() {
       setDaily(dailyRes.data);
       setMonthly(monthlyRes.data);
       setBestStudent(bestRes.data);
+      setDateReport(dateRangeRes.data);
     } catch (err) {
       console.error("Reports Error:", err);
       if (err.response) {
