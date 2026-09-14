@@ -253,3 +253,82 @@ def student_attendance_history(
         },
         "history": history
     }
+
+# ==========================
+# BULK UPLOAD STUDENTS
+# ==========================
+import pandas as pd
+import io
+
+@router.post("/bulk-upload")
+def bulk_upload_students(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    if not (file.filename.endswith(".csv") or file.filename.endswith(".xlsx") or file.filename.endswith(".xls")):
+        raise HTTPException(status_code=400, detail="Invalid file format. Please upload a .csv or .xlsx file")
+        
+    contents = file.file.read()
+    
+    try:
+        if file.filename.endswith(".csv"):
+            df = pd.read_csv(io.BytesIO(contents))
+        else:
+            df = pd.read_excel(io.BytesIO(contents))
+            
+        df.columns = [str(c).strip().lower() for c in df.columns]
+        
+        required_cols = {"name", "email", "roll", "department", "year"}
+        if not required_cols.issubset(set(df.columns)):
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Missing required columns. Required: {', '.join(required_cols)}"
+            )
+            
+        existing_rolls = {row[0] for row in db.query(Student.roll).all()}
+        existing_emails = {row[0] for row in db.query(Student.email).all()}
+        
+        new_students = []
+        skipped = 0
+        
+        for _, row in df.iterrows():
+            name = str(row.get("name", "")).strip()
+            email = str(row.get("email", "")).strip()
+            roll = str(row.get("roll", "")).strip()
+            department = str(row.get("department", "")).strip()
+            year = str(row.get("year", "")).strip()
+            
+            if not (name and email and roll and department and year):
+                skipped += 1
+                continue
+                
+            if roll in existing_rolls or email in existing_emails:
+                skipped += 1
+                continue
+                
+            pwd_hash = hash_password(roll)
+            
+            new_student = Student(
+                name=name,
+                email=email,
+                roll=roll,
+                department=department,
+                year=year,
+                password=pwd_hash
+            )
+            new_students.append(new_student)
+            
+            existing_rolls.add(roll)
+            existing_emails.add(email)
+            
+        if new_students:
+            db.bulk_save_objects(new_students)
+            db.commit()
+            
+        return {
+            "message": "Bulk upload completed",
+            "added": len(new_students),
+            "skipped": skipped
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("[Bulk Upload Error]:", e)
+        raise HTTPException(status_code=500, detail=f"Failed to process file: {str(e)}")

@@ -25,3 +25,9 @@ export const uploadStudentPhoto = (id, file) => {
     formData
   );
 };
+
+export const uploadStudentsBulk = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return API.post('/students/bulk-upload', formData);
+};

@@ -5,6 +5,7 @@ import {
   Download,
   Edit,
   Trash2,
+  Upload,
 } from "lucide-react";
 
 import { getAttendance } from "../../api/attendanceApi";
@@ -16,6 +17,7 @@ import {
   deleteStudent,
   getStudentAttendance,
   uploadStudentPhoto,
+  uploadStudentsBulk,
 } from "../../api/studentApi";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
@@ -60,6 +62,8 @@ function Students() {
 
   const [attendanceHistory, setAttendanceHistory] =
     useState(null);
+    
+  const [uploadingBulk, setUploadingBulk] = useState(false);
 
 
   // ==========================================
@@ -136,6 +140,31 @@ function Students() {
     loadStudents();
 
   }, []);
+
+
+  // ==========================================
+  // BULK UPLOAD
+  // ==========================================
+  
+  const handleBulkUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setUploadingBulk(true);
+    try {
+      const response = await uploadStudentsBulk(file);
+      alert(`Bulk Upload Success!\nAdded: ${response.data.added}\nSkipped: ${response.data.skipped}`);
+      await loadStudents();
+    } catch (err) {
+      console.error(err);
+      let errorMsg = err.response?.data?.detail || err.message || "Bulk upload failed";
+      if (typeof errorMsg === "object") errorMsg = JSON.stringify(errorMsg);
+      alert(errorMsg);
+    } finally {
+      setUploadingBulk(false);
+      e.target.value = null; // reset input
+    }
+  };
 
 
   // ==========================================
@@ -657,6 +686,43 @@ function Students() {
             Export
 
           </button>
+          
+          {/* IMPORT EXCEL */}
+          <label
+            className={`
+              flex
+              items-center
+              gap-2
+              rounded-xl
+              border
+              border-slate-200
+              dark:border-slate-800
+              bg-white
+              dark:bg-slate-800
+              text-slate-700
+              dark:text-slate-200
+              px-5
+              py-3
+              font-medium
+              transition
+              cursor-pointer
+              hover:-translate-y-0.5
+              hover:bg-slate-50
+              dark:hover:bg-slate-700
+              hover:shadow-md
+              ${uploadingBulk ? 'opacity-50 cursor-not-allowed' : ''}
+            `}
+          >
+            <Upload size={18} />
+            {uploadingBulk ? "Uploading..." : "Import Excel"}
+            <input 
+              type="file" 
+              accept=".csv, .xlsx, .xls" 
+              className="hidden" 
+              onChange={handleBulkUpload}
+              disabled={uploadingBulk}
+            />
+          </label>
 
 
           {/* ADD STUDENT */}
