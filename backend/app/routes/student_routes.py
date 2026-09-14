@@ -1,4 +1,4 @@
-from fastapi import UploadFile, File, Form
+from fastapi import UploadFile, File
 import shutil
 import os
 import json
@@ -146,7 +146,6 @@ def get_student(student_id: int, db: Session = Depends(get_db)):
 def upload_student_photo(
     student_id: int,
     file: UploadFile = File(...),
-    append: bool = Form(False),
     db: Session = Depends(get_db)
 ):
 
@@ -174,32 +173,15 @@ def upload_student_photo(
         )
     elif encoding is None:
         print("[Warning] Face encoding failed or AI service unavailable. Saving photo without encoding.")
-        if append and student.photo:
-            student.photo = f"{student.photo},{filepath}"
-        else:
-            student.photo = filepath
+        student.photo = filepath
         db.commit()
         return {
             "message": "Photo uploaded successfully (AI Encoding skipped - Service Unavailable)",
-            "photo": student.photo
+            "photo": filepath
         }
 
-    import json
-    new_encoding = json.loads(encoding)
-    
-    if append and student.face_encoding:
-        existing_encodings = json.loads(student.face_encoding)
-        if len(existing_encodings) > 0 and not isinstance(existing_encodings[0], list):
-            existing_encodings = [existing_encodings]
-        existing_encodings.append(new_encoding)
-        student.face_encoding = json.dumps(existing_encodings)
-        if student.photo:
-            student.photo = f"{student.photo},{filepath}"
-        else:
-            student.photo = filepath
-    else:
-        student.photo = filepath
-        student.face_encoding = json.dumps([new_encoding])
+    student.photo = filepath
+    student.face_encoding = encoding
 
     db.commit()
 

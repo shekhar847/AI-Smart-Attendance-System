@@ -278,8 +278,7 @@ function Students() {
         const photoResponse =
           await uploadStudentPhoto(
             studentId,
-            student.photo,
-            student.appendPhoto
+            student.photo
           );
 
 
@@ -554,13 +553,10 @@ function Students() {
       return null;
     }
 
-    // Handle multiple appended photos (take the last/newest one)
-    const photoList = photo.split(",");
-    const latestPhoto = photoList[photoList.length - 1].trim();
 
     // Windows path ko Linux/web path mein convert
     let cleanPath =
-      latestPhoto.replace(/\\/g, "/");
+      photo.replace(/\\/g, "/");
 
 
     // Agar database mein:

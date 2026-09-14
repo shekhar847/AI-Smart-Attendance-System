@@ -15,11 +15,10 @@ export const deleteStudent = (id) =>
 export const getStudentAttendance = (id) =>
   API.get(`/students/${id}/attendance`);
 
-export const uploadStudentPhoto = (id, file, append = false) => {
+export const uploadStudentPhoto = (id, file) => {
   const formData = new FormData();
 
   formData.append("file", file);
-  formData.append("append", append);
 
   return API.post(
     `/students/${id}/upload-photo`,
