@@ -29,6 +29,10 @@ desktop.ini
 .vscode/
 .idea/
 frontend/face-api-models/
+.next/
+out/
+frontend/.next/
+frontend/out/
 .vercel
 
 frontend-vite-backup/
