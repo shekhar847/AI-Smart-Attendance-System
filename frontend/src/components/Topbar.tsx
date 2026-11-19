@@ -248,8 +248,8 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
             onClick={() => setOpenMenu(!openMenu)}
             className="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-800/50 p-1.5 pr-3 transition hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md">
-              {admin?.name ? admin.name.charAt(0).toUpperCase() : "A"}
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#c8f135] text-slate-950 font-black text-sm shadow-md">
+              {admin?.name ? admin.name.charAt(0).toUpperCase() : "S"}
             </div>
             <div className="hidden sm:block text-left">
               <p className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[120px]">
@@ -313,7 +313,7 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
             <div className="w-full max-w-md rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/25">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#c8f135] text-slate-950 font-bold shadow-lg shadow-[#c8f135]/25">
                     <User size={20} />
                   </div>
                   <div>
@@ -370,7 +370,7 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowProfileModal(false)}
-                  className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-md"
+                  className="rounded-xl bg-[#c8f135] hover:bg-[#b5e028] px-6 py-2.5 text-sm font-bold text-slate-950 transition shadow-md"
                 >
                   Close
                 </button>

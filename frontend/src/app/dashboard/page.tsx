@@ -55,7 +55,7 @@ export default function DashboardPage() {
               title="Total Students"
               value={loading ? "..." : dashboard.students}
               icon={<Users size={24} />}
-              color="#2563EB"
+              color="#c8f135"
               change="+5%"
             />
 

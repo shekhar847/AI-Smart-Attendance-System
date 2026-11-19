@@ -149,17 +149,17 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Header / Brand */}
         <div className="flex h-16 items-center justify-between px-5 border-b border-slate-200/60 dark:border-slate-800/60">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white font-extrabold text-lg shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-200">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#c8f135] to-[#a3e635] text-slate-950 font-black text-lg shadow-lg shadow-[#c8f135]/30 group-hover:scale-105 transition-transform duration-200">
               AI
               <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c8f135] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#c8f135]"></span>
               </span>
             </div>
             <div>
               <h2 className="text-base font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                 SmartAttend
-                <span className="rounded-full bg-blue-500/10 dark:bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-cyan-400 border border-blue-500/20 dark:border-cyan-500/20">
+                <span className="rounded-full bg-[#c8f135]/15 px-2 py-0.5 text-[10px] font-bold text-[#a6d81e] dark:text-[#c8f135] border border-[#c8f135]/30">
                   v2.4
                 </span>
               </h2>
@@ -180,7 +180,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* User Role Tag */}
         <div className="mx-4 mt-3 mb-2 px-3 py-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <div className="h-2 w-2 rounded-full bg-[#c8f135] animate-pulse"></div>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               {role} Account
             </span>
@@ -204,22 +204,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   key={index}
                   href={item.to}
                   onClick={onClose}
-                  className={`group flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+                  className={`group flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm font-bold transition-all duration-200 ${
                     isActive
-                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100"
+                      ? "bg-[#c8f135] text-slate-950 shadow-md shadow-[#c8f135]/25"
+                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   <span
                     className={`transition-transform duration-200 group-hover:scale-110 ${
-                      isActive ? "text-white" : "text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-cyan-400"
+                      isActive ? "text-slate-950" : "text-slate-400 dark:text-slate-500 group-hover:text-[#c8f135]"
                     }`}
                   >
                     {item.icon}
                   </span>
                   <span className="flex-1">{item.title}</span>
                   {isActive && (
-                    <span className="h-2 w-2 rounded-full bg-white animate-pulse"></span>
+                    <span className="h-2 w-2 rounded-full bg-slate-950 animate-pulse"></span>
                   )}
                 </Link>
               );
@@ -230,10 +230,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Footer Area with System Status & Logout */}
       <div className="p-4 border-t border-slate-200/60 dark:border-slate-800/60 space-y-2.5 bg-slate-50/50 dark:bg-[#0b0f19]/80">
-        <div className="rounded-xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-cyan-500/10 p-3 border border-indigo-500/20 dark:border-indigo-500/20">
+        <div className="rounded-xl bg-gradient-to-br from-[#c8f135]/10 via-[#a3e635]/5 to-transparent p-3 border border-[#c8f135]/20">
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles size={14} className="text-cyan-500 animate-spin" />
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-cyan-400">
+            <Sparkles size={14} className="text-[#c8f135] animate-spin" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#a6d81e] dark:text-[#c8f135]">
               AI Core Status
             </span>
           </div>

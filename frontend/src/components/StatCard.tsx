@@ -46,7 +46,9 @@ export default function StatCard({
 
         {/* Gradient Icon Badge */}
         <div
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${
+            color.toLowerCase().includes("c8f135") ? "text-slate-950 font-bold" : "text-white"
+          }`}
           style={{
             background: `linear-gradient(135deg, ${color}, ${color}dd)`,
             boxShadow: `0 8px 20px -6px ${color}88`,

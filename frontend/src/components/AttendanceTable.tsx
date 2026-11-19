@@ -102,7 +102,7 @@ export default function AttendanceTable() {
                   >
                     <td className="p-4 pl-6 md:pl-8">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-xs shadow-sm">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#c8f135] text-slate-950 font-black text-xs shadow-sm">
                           {student?.name ? student.name.charAt(0).toUpperCase() : "S"}
                         </div>
                         <span className="font-bold text-slate-900 dark:text-white">

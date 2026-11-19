@@ -48,7 +48,7 @@ export default function AttendanceSummary() {
       <div className="mt-6 space-y-4">
         <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c8f135]/15 text-[#a6d81e] dark:text-[#c8f135]">
               <Users size={18} />
             </div>
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
@@ -94,13 +94,13 @@ export default function AttendanceSummary() {
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Attendance Rate
           </span>
-          <span className="text-sm font-extrabold text-blue-600 dark:text-cyan-400">
+          <span className="text-sm font-extrabold text-[#a6d81e] dark:text-[#c8f135]">
             {percentage}%
           </span>
         </div>
         <div className="h-3 w-full rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 transition-all duration-500"
+            className="h-full rounded-full bg-[#c8f135] transition-all duration-500"
             style={{ width: `${Math.min(100, Math.max(0, Number(percentage)))}%` }}
           />
         </div>
