@@ -50,21 +50,21 @@ export default function AttendanceTable() {
     });
 
   return (
-    <div className="rounded-xl bg-white dark:bg-[#0e121b] shadow-sm border border-slate-200 dark:border-slate-800/80 transition-all duration-200 overflow-hidden">
+    <div className="rounded-3xl glass-card shadow-xl border border-white/40 dark:border-slate-800/80 transition-all duration-300 overflow-hidden">
       {/* Header & Filter Controls */}
-      <div className="p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80">
+      <div className="p-6 md:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 dark:border-slate-800/60">
         <div>
-          <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
-            <ShieldCheck size={15} /> Real-Time Log
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
+            <ShieldCheck size={16} /> Live Verification Log
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">
             Recent Attendance
           </h2>
         </div>
 
         <div className="relative w-full sm:w-72">
           <Search
-            size={16}
+            size={18}
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
           />
           <input
@@ -72,7 +72,7 @@ export default function AttendanceTable() {
             placeholder="Search by student or ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 py-2 pl-9 pr-4 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 py-2.5 pl-10 pr-4 text-xs font-medium text-slate-800 dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
       </div>
@@ -81,17 +81,17 @@ export default function AttendanceTable() {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-800/30 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th className="p-3.5 pl-6">Student</th>
-              <th className="p-3.5">Student ID</th>
-              <th className="p-3.5">Department</th>
-              <th className="p-3.5">Date</th>
-              <th className="p-3.5">Time</th>
-              <th className="p-3.5">Status Indicator</th>
-              <th className="p-3.5 pr-6 text-right">Verification</th>
+            <tr className="border-b border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-800/30 text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <th className="p-4 pl-6 md:pl-8">Student</th>
+              <th className="p-4">Student ID</th>
+              <th className="p-4">Department</th>
+              <th className="p-4">Date</th>
+              <th className="p-4">Time</th>
+              <th className="p-4">Emotion</th>
+              <th className="p-4 pr-6 md:pr-8 text-right">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs font-medium">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50 text-xs font-semibold">
             {filteredAttendance.length > 0 ? (
               filteredAttendance.slice(0, 15).map((item) => {
                 const student = getStudent(item.student_id);
@@ -100,36 +100,36 @@ export default function AttendanceTable() {
                     key={item.id}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                   >
-                    <td className="p-3.5 pl-6">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xs shadow-sm">
+                    <td className="p-4 pl-6 md:pl-8">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-xs shadow-sm">
                           {student?.name ? student.name.charAt(0).toUpperCase() : "S"}
                         </div>
-                        <span className="font-semibold text-slate-900 dark:text-white">
+                        <span className="font-bold text-slate-900 dark:text-white">
                           {student?.name || `Student #${item.student_id}`}
                         </span>
                       </div>
                     </td>
-                    <td className="p-3.5 text-slate-600 dark:text-slate-300 font-mono text-[11px]">
+                    <td className="p-4 text-slate-600 dark:text-slate-300 font-mono">
                       {student?.roll || "N/A"}
                     </td>
-                    <td className="p-3.5 text-slate-600 dark:text-slate-300">
+                    <td className="p-4 text-slate-600 dark:text-slate-300">
                       {student?.department || "N/A"}
                     </td>
-                    <td className="p-3.5 text-slate-600 dark:text-slate-300">
+                    <td className="p-4 text-slate-600 dark:text-slate-300">
                       {item.date}
                     </td>
-                    <td className="p-3.5 text-slate-600 dark:text-slate-300 font-mono text-[11px]">
+                    <td className="p-4 text-slate-600 dark:text-slate-300 font-mono">
                       {item.time}
                     </td>
-                    <td className="p-3.5">
-                      <span className="rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        {item.emotion_status || "Verified"}
+                    <td className="p-4">
+                      <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {item.emotion_status || "Neutral"}
                       </span>
                     </td>
-                    <td className="p-3.5 pr-6 text-right">
-                      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40">
-                        <CheckCircle size={12} />
+                    <td className="p-4 pr-6 md:pr-8 text-right">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <CheckCircle size={13} />
                         {item.status || "Present"}
                       </span>
                     </td>
