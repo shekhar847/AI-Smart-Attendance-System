@@ -18,7 +18,7 @@ fi
 
 # Start Frontend
 if [ -d "frontend" ]; then
-    echo "💻 Starting Frontend Dev Server on http://localhost:5173..."
+    echo "💻 Starting Frontend Dev Server on http://localhost:3000..."
     cd frontend
     export PATH="/home/dell/.nvm/versions/node/v24.18.0/bin:$PATH"
     npm run dev &

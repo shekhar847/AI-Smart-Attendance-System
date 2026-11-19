@@ -26,7 +26,7 @@ An end-to-end, state-of-the-art **AI-Powered Smart Attendance System** featuring
 
 | Layer | Technologies Used |
 |---|---|
-| **Frontend** | React 19, Vite, Tailwind CSS v4, Lucide Icons, Recharts, `face-api.js`, Axios, jsPDF, XLSX |
+| **Frontend** | React 19, Next.js (App Router), TypeScript, Tailwind CSS v4, Lucide Icons, Recharts, `face-api.js`, Axios, jsPDF, XLSX |
 | **Backend API** | Python 3.11, FastAPI, SQLAlchemy ORM, Pydantic v2, PyJWT, Passlib (Bcrypt), Uvicorn |
 | **AI Microservice** | Python 3.11, OpenCV (`cv2`), `face_recognition`, NumPy, FastAPI |
 | **Database** | SQLite (Development/Fallback), MySQL 8.0 (Production) |
@@ -51,18 +51,18 @@ AI-Smart-Attendance-System/
 │   ├── main.py               # FastAPI application entry point
 │   ├── create_admin.py       # Admin seeding script
 │   └── requirements.txt      # Python dependencies
-├── frontend/                 # React (Vite + Tailwind CSS v4) Frontend
+├── frontend/                 # React 19 (Next.js App Router + TypeScript + Tailwind CSS v4)
 │   ├── src/
-│   │   ├── api/              # Axios API client modules
-│   │   ├── assets/           # Images & static assets
-│   │   ├── components/       # Reusable UI components & modals
+│   │   ├── api/              # Typed Axios API client modules
+│   │   ├── app/              # Next.js App Router (Layouts & Pages)
+│   │   ├── components/       # Reusable UI components & modals (TypeScript)
 │   │   ├── layouts/          # Dashboard layout wrappers
-│   │   ├── pages/            # Page components (Attendance, Students, Reports, etc.)
-│   │   ├── routes/           # Protected router configuration
-│   │   └── App.jsx           # Main application entry
+│   │   └── types/            # TypeScript interface definitions
 │   ├── public/               # Static assets & face-api.js models
-│   ├── package.json          # Frontend dependencies & scripts
-│   └── vite.config.js        # Vite configuration
+│   ├── next.config.ts        # Next.js configuration
+│   ├── postcss.config.mjs    # PostCSS Tailwind CSS v4 configuration
+│   ├── tsconfig.json         # TypeScript configuration
+│   └── package.json          # Frontend dependencies & scripts
 ├── ai-service/               # Standalone AI Face Recognition Microservice
 │   ├── main.py               # Face encoding extraction & matching endpoints
 │   ├── requirements.txt      # AI dependencies (OpenCV, face_recognition)
@@ -114,11 +114,11 @@ cd frontend
 # Install dependencies
 npm install
 
-# Start Vite dev server on port 5173
+# Start Next.js dev server on port 3000
 npm run dev
 ```
 
-Open **`http://localhost:5173`** in your browser.
+Open **`http://localhost:3000`** in your browser.
 
 #### Default Credentials:
 - **Email**: `admin@gmail.com`

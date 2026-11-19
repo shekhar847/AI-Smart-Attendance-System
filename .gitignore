@@ -30,3 +30,5 @@ desktop.ini
 .idea/
 frontend/face-api-models/
 .vercel
+
+frontend-vite-backup/

@@ -1,10 +1,12 @@
+import os
+import urllib.parse
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
+# Set USE_SQLITE=false to prioritize MySQL
 USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() == "true"
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
@@ -13,43 +15,64 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = os.getenv("DB_NAME", "ai_attendance")
 
-if USE_SQLITE:
+encoded_password = urllib.parse.quote_plus(DB_PASSWORD)
+
+def ensure_mysql_database():
+    """Auto-creates the MySQL database if it does not exist."""
+    try:
+        import pymysql
+        conn = pymysql.connect(
+            host=DB_HOST,
+            port=int(DB_PORT),
+            user=DB_USER,
+            password=DB_PASSWORD,
+            connect_timeout=5,
+        )
+        with conn.cursor() as cursor:
+            cursor.execute(
+                f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+            )
+        conn.commit()
+        conn.close()
+        print(f"[INFO] MySQL database `{DB_NAME}` verified/created on {DB_HOST}:{DB_PORT}.")
+    except Exception as e:
+        print(f"[WARNING] MySQL auto-database creation notice: {e}")
+
+if not USE_SQLITE:
+    ensure_mysql_database()
+    DATABASE_URL = (
+        f"mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
+    try:
+        engine = create_engine(
+            DATABASE_URL,
+            echo=False,
+            pool_pre_ping=True,
+            pool_recycle=3600,
+        )
+        with engine.connect() as conn:
+            print(f"[INFO] Successfully connected to MySQL database: `{DB_NAME}`")
+    except Exception as e:
+        print(f"[WARNING] Could not connect to MySQL server ({e}). Falling back to SQLite.")
+        DATABASE_URL = "sqlite:///./ai_attendance.db"
+        engine = create_engine(
+            DATABASE_URL,
+            connect_args={"check_same_thread": False},
+            echo=False,
+        )
+else:
     DATABASE_URL = "sqlite:///./ai_attendance.db"
     engine = create_engine(
         DATABASE_URL,
         connect_args={"check_same_thread": False},
-        echo=False
+        echo=False,
     )
-else:
-    DATABASE_URL = (
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
-    import time
-    engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
-    
-    max_retries = 5
-    for attempt in range(max_retries):
-        try:
-            with engine.connect() as conn:
-                print("[INFO] Successfully connected to MySQL database.")
-                break
-        except Exception as e:
-            if attempt < max_retries - 1:
-                print(f"[WARNING] MySQL connection failed. Retrying in 5 seconds... ({e})")
-                time.sleep(5)
-            else:
-                print(f"[ERROR] MySQL connection failed after {max_retries} attempts. Falling back to SQLite.")
-                DATABASE_URL = "sqlite:///./ai_attendance.db"
-                engine = create_engine(
-                    DATABASE_URL,
-                    connect_args={"check_same_thread": False},
-                    echo=False
-                )
+    print("[INFO] Using SQLite database fallback (ai_attendance.db).")
 
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
-    bind=engine
+    bind=engine,
 )
 
 Base = declarative_base()
