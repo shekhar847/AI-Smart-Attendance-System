@@ -120,9 +120,15 @@ export default function TeacherModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4" autoComplete="off">
+          {/* Chrome password manager trap */}
+          <div className="sr-only" aria-hidden="true" style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}>
+            <input type="text" name="fake_teacher_user_trap" tabIndex={-1} autoComplete="off" />
+            <input type="password" name="fake_teacher_pass_trap" tabIndex={-1} autoComplete="new-password" />
+          </div>
+
           <div className="flex items-center gap-5 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
-            <div className="relative h-20 w-20 shrink-0 rounded-2xl border-2 border-dashed border-blue-500 bg-white dark:bg-slate-900 overflow-hidden flex items-center justify-center">
+            <div className="relative h-20 w-20 shrink-0 rounded-2xl border-2 border-dashed border-[#c8f135]/50 bg-white dark:bg-slate-900 overflow-hidden flex items-center justify-center">
               {photoPreview ? (
                 <img
                   src={photoPreview}
@@ -158,9 +164,11 @@ export default function TeacherModal({
               </label>
               <input
                 type="text"
+                name="teacher_fullname"
+                autoComplete="off"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
               {errors.name && <p className="mt-1 text-xs text-rose-500">{errors.name}</p>}
             </div>
@@ -171,9 +179,13 @@ export default function TeacherModal({
               </label>
               <input
                 type="text"
+                name="teacher_employee_id"
+                autoComplete="off"
+                data-lpignore="true"
+                data-1p-ignore
                 value={form.employee_id}
                 onChange={(e) => setForm({ ...form, employee_id: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600 font-mono"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135] font-mono"
               />
               {errors.employee_id && (
                 <p className="mt-1 text-xs text-rose-500">{errors.employee_id}</p>
@@ -186,9 +198,11 @@ export default function TeacherModal({
               </label>
               <input
                 type="email"
+                name="teacher_email_address"
+                autoComplete="off"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
               {errors.email && <p className="mt-1 text-xs text-rose-500">{errors.email}</p>}
             </div>
@@ -199,9 +213,11 @@ export default function TeacherModal({
               </label>
               <input
                 type="text"
+                name="teacher_department_name"
+                autoComplete="off"
                 value={form.department}
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
               {errors.department && (
                 <p className="mt-1 text-xs text-rose-500">{errors.department}</p>
@@ -214,9 +230,11 @@ export default function TeacherModal({
               </label>
               <input
                 type="text"
+                name="teacher_designation_title"
+                autoComplete="off"
                 value={form.designation}
                 onChange={(e) => setForm({ ...form, designation: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
               {errors.designation && (
                 <p className="mt-1 text-xs text-rose-500">{errors.designation}</p>
@@ -229,9 +247,13 @@ export default function TeacherModal({
               </label>
               <input
                 type="password"
+                name="teacher_account_password"
+                autoComplete="new-password"
+                data-lpignore="true"
+                data-1p-ignore
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
             </div>
           </div>

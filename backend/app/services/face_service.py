@@ -1,6 +1,5 @@
 import json
 import numpy as np
-import face_recognition
 
 from sqlalchemy.orm import Session
 from app.models.student_model import Student
@@ -13,6 +12,7 @@ from app.models.student_model import Student
 def generate_face_encoding(image_path: str):
 
     try:
+        import face_recognition
         image = face_recognition.load_image_file(image_path)
         encodings = face_recognition.face_encodings(image)
 
@@ -22,6 +22,9 @@ def generate_face_encoding(image_path: str):
         encoding = encodings[0]
         return json.dumps(encoding.tolist())
 
+    except ImportError:
+        print("[Face Engine Notice] face_recognition not installed on host. Storing photo without encoding.")
+        return None
     except Exception as e:
         print("Face Encoding Error :", e)
         return None
@@ -34,6 +37,7 @@ def generate_face_encoding(image_path: str):
 def recognize_face(image_path: str, db_or_students):
 
     try:
+        import face_recognition
         image = face_recognition.load_image_file(image_path)
 
         unknown_encodings = face_recognition.face_encodings(image)

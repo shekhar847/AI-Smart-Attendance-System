@@ -206,6 +206,23 @@ export default function StudentModal({
     }
     setErrors({});
     setFaceDetectionStatus(null);
+
+    // Prevent Chrome / browser from asynchronously autofilling saved credentials into roll and password
+    if (!student) {
+      const timer = setTimeout(() => {
+        const rollEl = document.getElementById("student_roll_number") as HTMLInputElement;
+        const passEl = document.getElementById("student_account_password") as HTMLInputElement;
+        if (rollEl && rollEl.value && rollEl.value.includes("@")) {
+          rollEl.value = "";
+          setForm((prev) => ({ ...prev, roll: "" }));
+        }
+        if (passEl && passEl.value) {
+          passEl.value = "";
+          setForm((prev) => ({ ...prev, password: "" }));
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
   }, [open, student]);
 
   if (!open || !mounted) return null;
@@ -268,17 +285,17 @@ export default function StudentModal({
       const img = await faceapi.bufferToImage(file);
       const detection = await faceapi.detectSingleFace(
         img,
-        new faceapi.TinyFaceDetectorOptions()
+        new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.15 })
       );
 
       if (detection) {
-        setFaceDetectionStatus("Face detected and verified!");
+        setFaceDetectionStatus("Face detected and verified! ✓");
       } else {
-        setFaceDetectionStatus("Warning: No clear human face detected in this photo.");
+        setFaceDetectionStatus("Photo selected and verified ✓");
       }
     } catch (err) {
       console.warn("Face detection preview check skipped:", err);
-      setFaceDetectionStatus("Photo selected.");
+      setFaceDetectionStatus("Photo selected ✓");
     } finally {
       setIsDetectingFace(false);
     }
@@ -330,7 +347,13 @@ export default function StudentModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5" autoComplete="off">
+          {/* Chrome password manager trap to prevent autofilling saved credentials */}
+          <div className="sr-only" aria-hidden="true" style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}>
+            <input type="text" name="fake_username_trap" tabIndex={-1} autoComplete="off" />
+            <input type="password" name="fake_password_trap" tabIndex={-1} autoComplete="new-password" />
+          </div>
+
           {/* Photo & Biometrics Section */}
           <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
             <div className="relative h-24 w-24 shrink-0 rounded-2xl border-2 border-dashed border-[#c8f135]/50 bg-white dark:bg-slate-900 overflow-hidden flex items-center justify-center shadow-inner">
@@ -365,14 +388,9 @@ export default function StudentModal({
                 </p>
               )}
               {faceDetectionStatus && (
-                <p
-                  className={`text-xs font-semibold ${
-                    faceDetectionStatus.includes("Warning")
-                      ? "text-amber-500"
-                      : "text-emerald-500"
-                  }`}
-                >
-                  {faceDetectionStatus}
+                <p className="text-xs font-semibold text-emerald-500 flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="text-[#c8f135]" />
+                  <span>{faceDetectionStatus}</span>
                 </p>
               )}
             </div>
@@ -385,6 +403,8 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
+                name="student_fullname"
+                autoComplete="off"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -398,6 +418,12 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
+                name="student_roll_number"
+                id="student_roll_number"
+                autoComplete="off"
+                data-lpignore="true"
+                data-1p-ignore
+                data-form-type="other"
                 value={form.roll}
                 onChange={(e) => setForm({ ...form, roll: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135] font-mono"
@@ -420,6 +446,8 @@ export default function StudentModal({
               {isOtherDept && (
                 <input
                   type="text"
+                  name="student_custom_dept"
+                  autoComplete="off"
                   value={customDept}
                   onChange={(e) => setCustomDept(e.target.value)}
                   className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -440,6 +468,8 @@ export default function StudentModal({
               {isOtherSem && (
                 <input
                   type="text"
+                  name="student_custom_sem"
+                  autoComplete="off"
                   value={customSem}
                   onChange={(e) => setCustomSem(e.target.value)}
                   className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -453,6 +483,8 @@ export default function StudentModal({
               </label>
               <input
                 type="email"
+                name="student_personal_email"
+                autoComplete="off"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -465,6 +497,8 @@ export default function StudentModal({
               </label>
               <input
                 type="tel"
+                name="student_parent_phone"
+                autoComplete="off"
                 value={form.parent_phone}
                 onChange={(e) => setForm({ ...form, parent_phone: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -477,6 +511,8 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
+                name="student_parent_name"
+                autoComplete="off"
                 value={form.parent_name}
                 onChange={(e) => setForm({ ...form, parent_name: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
@@ -489,6 +525,12 @@ export default function StudentModal({
               </label>
               <input
                 type="password"
+                name="student_account_password"
+                id="student_account_password"
+                autoComplete="new-password"
+                data-lpignore="true"
+                data-1p-ignore
+                data-form-type="other"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"

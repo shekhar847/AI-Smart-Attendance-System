@@ -27,7 +27,7 @@ def generate_face_encoding(image_path):
                         "image/jpeg"
                     )
                 },
-                timeout=60.0
+                timeout=httpx.Timeout(4.0, connect=1.5)
             )
 
         if response.status_code == 400:
@@ -108,7 +108,7 @@ def recognize_face(image_path, students):
                     "known_students_json": known_students_json,
                     "tolerance": "0.6"
                 },
-                timeout=60.0
+                timeout=httpx.Timeout(5.0, connect=1.5)
             )
 
         if response.status_code not in (200, 400):
