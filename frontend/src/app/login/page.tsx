@@ -272,7 +272,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={handleOpenForgot}
-                      className="text-[11px] font-semibold text-blue-600 dark:text-cyan-400 hover:underline"
+                      className="text-[11px] font-semibold text-[#84cc16] dark:text-[#c8f135] hover:underline"
                     >
                       Forgot password?
                     </button>

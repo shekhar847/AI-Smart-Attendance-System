@@ -10,8 +10,8 @@ export default function HeroSection() {
   return (
     <div className="hidden lg:flex w-1/2 items-center justify-center px-8 relative">
       <div className="max-w-xl z-10">
-        <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-6 backdrop-blur-md">
-          <Sparkles size={14} className="animate-spin text-cyan-400" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#c8f135]/30 bg-[#c8f135]/10 px-4 py-1.5 text-xs font-bold text-[#a6d81e] dark:text-[#c8f135] mb-6 backdrop-blur-md">
+          <Sparkles size={14} className="animate-spin text-[#c8f135]" />
           Next-Gen AI Facial Telemetry v2.4
         </div>
 
@@ -25,7 +25,7 @@ export default function HeroSection() {
 
         <div className="mt-8 space-y-4">
           <div className="group flex items-center gap-4 rounded-2xl glass-card p-4 transition-all duration-300 hover:scale-[1.02] border border-white/40 dark:border-slate-800/80">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#c8f135] to-[#a3e635] text-slate-950 font-black shadow-md shadow-[#c8f135]/25">
               <BrainCircuit size={24} />
             </div>
             <div>
@@ -39,7 +39,7 @@ export default function HeroSection() {
           </div>
 
           <div className="group flex items-center gap-4 rounded-2xl glass-card p-4 transition-all duration-300 hover:scale-[1.02] border border-white/40 dark:border-slate-800/80">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 text-white shadow-md shadow-cyan-500/20">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#c8f135] to-[#84cc16] text-slate-950 font-black shadow-md shadow-[#c8f135]/25">
               <ScanFace size={24} />
             </div>
             <div>
@@ -53,7 +53,7 @@ export default function HeroSection() {
           </div>
 
           <div className="group flex items-center gap-4 rounded-2xl glass-card p-4 transition-all duration-300 hover:scale-[1.02] border border-white/40 dark:border-slate-800/80">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/20">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#a3e635] to-[#65a30d] text-slate-950 font-black shadow-md shadow-[#c8f135]/25">
               <BarChart3 size={24} />
             </div>
             <div>
