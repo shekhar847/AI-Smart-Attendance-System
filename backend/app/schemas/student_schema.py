@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, Any
 
 
 class Student(BaseModel):
@@ -16,8 +16,8 @@ class Student(BaseModel):
     password: Optional[str] = None
 
     # New Fields
-    photo: Optional[str] = None
-    face_encoding: Optional[str] = None
+    photo: Optional[Any] = None
+    face_encoding: Optional[Any] = None
 
 
 class StudentResponse(Student):

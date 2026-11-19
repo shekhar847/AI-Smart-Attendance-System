@@ -9,11 +9,27 @@ AI_SERVICE_URL = os.getenv(
 ).rstrip("/")
 
 
+def check_ai_service_online() -> bool:
+    try:
+        r = httpx.get(f"{AI_SERVICE_URL}/health", timeout=0.4)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+
 def generate_face_encoding(image_path):
     """
     Generate face encoding using the AI microservice.
     Returns JSON string or None.
     """
+
+    if not check_ai_service_online():
+        try:
+            from app.services.face_service import generate_face_encoding as local_generate_face_encoding
+            return local_generate_face_encoding(image_path)
+        except Exception as fallback_err:
+            print("Local fallback face encoding error:", fallback_err)
+            return None
 
     try:
         with open(image_path, "rb") as image_file:
@@ -69,6 +85,14 @@ def recognize_face(image_path, students):
         SQLAlchemy Student objects containing:
         id, name, roll, face_encoding
     """
+
+    if not check_ai_service_online():
+        try:
+            from app.services.face_service import recognize_face as local_recognize_face
+            return local_recognize_face(image_path, students)
+        except Exception as fallback_err:
+            print("Local fallback face recognition error:", fallback_err)
+            return None
 
     try:
 

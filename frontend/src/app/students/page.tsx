@@ -70,24 +70,39 @@ export default function StudentsPage() {
 
   const handleSave = async (formData: any) => {
     try {
+      const { photo, ...studentPayload } = formData;
       let studentId = editingStudent?.id;
 
       if (editingStudent) {
-        await updateStudent(editingStudent.id, formData);
+        await updateStudent(editingStudent.id, studentPayload);
       } else {
-        const res = await addStudent(formData);
+        const res = await addStudent(studentPayload);
         studentId = res.data.id;
       }
 
-      if (formData.photo && studentId) {
-        await uploadStudentPhoto(studentId, formData.photo);
+      if (photo && studentId) {
+        await uploadStudentPhoto(studentId, photo);
       }
 
       setOpenModal(false);
       setEditingStudent(null);
       loadStudents();
     } catch (err: any) {
-      alert("Failed to save student: " + (err.response?.data?.detail || err.message));
+      console.error("Save student error:", err);
+      let errorMsg = err.message;
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        if (typeof detail === "string") {
+          errorMsg = detail;
+        } else if (Array.isArray(detail)) {
+          errorMsg = detail
+            .map((d: any) => d.msg || JSON.stringify(d))
+            .join(", ");
+        } else {
+          errorMsg = JSON.stringify(detail);
+        }
+      }
+      alert("Failed to save student: " + errorMsg);
     }
   };
 

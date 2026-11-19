@@ -41,18 +41,19 @@ export default function TeachersPage() {
 
   const handleSave = async (teacherData: any) => {
     try {
+      const { photo, ...teacherPayload } = teacherData;
       let teacherId: number;
 
       if (editingTeacher) {
-        await updateTeacher(editingTeacher.id, teacherData);
+        await updateTeacher(editingTeacher.id, teacherPayload);
         teacherId = editingTeacher.id;
       } else {
-        const response = await addTeacher(teacherData);
+        const response = await addTeacher(teacherPayload);
         teacherId = response.data.id;
       }
 
-      if (teacherData.photo && teacherId) {
-        await uploadTeacherPhoto(teacherId, teacherData.photo);
+      if (photo && teacherId) {
+        await uploadTeacherPhoto(teacherId, photo);
       }
 
       setShowModal(false);
