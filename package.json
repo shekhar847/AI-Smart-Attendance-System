@@ -2,7 +2,7 @@
   "name": "ai-smart-attendance-system",
   "private": true,
   "scripts": {
-    "build": "node build.js",
+    "build": "npm run build --prefix frontend && node postbuild.cjs",
     "start": "npm run start --prefix frontend",
     "dev": "npm run dev --prefix frontend"
   }
