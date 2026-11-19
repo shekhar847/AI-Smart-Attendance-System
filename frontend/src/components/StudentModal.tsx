@@ -8,6 +8,14 @@ import { Student } from "../types";
 
 const PREDEFINED_DEPTS = ["MCA", "B.Tech", "BCA", "MBA", "BBA"];
 
+const DEPARTMENT_SEMESTERS: Record<string, number> = {
+  MCA: 4,
+  MBA: 4,
+  BBA: 6,
+  BCA: 6,
+  "B.Tech": 8,
+};
+
 interface CustomSelectProps {
   label: string;
   value: string;
@@ -15,6 +23,7 @@ interface CustomSelectProps {
   onChange: (val: string) => void;
   error?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const CustomSelect = ({
@@ -24,6 +33,7 @@ const CustomSelect = ({
   onChange,
   error,
   placeholder,
+  disabled = false,
 }: CustomSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -41,21 +51,27 @@ const CustomSelect = ({
   }, [isOpen]);
 
   return (
-    <div className="relative" ref={selectRef}>
-      <label className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+    <div className={`relative ${disabled ? "opacity-60" : ""}`} ref={selectRef}>
+      <label className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300">
         {label}
       </label>
       <div
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-full cursor-pointer rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition flex justify-between items-center ${
+        onClick={() => {
+          if (!disabled) setIsOpen(!isOpen);
+        }}
+        className={`w-full rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-2.5 text-sm outline-none transition flex justify-between items-center ${
+          disabled
+            ? "cursor-not-allowed bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
+            : "cursor-pointer hover:border-slate-400 dark:hover:border-slate-600"
+        } ${
           error
             ? "border-red-500"
             : isOpen
-            ? "border-blue-600 ring-1 ring-blue-600"
-            : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
+            ? "border-[#c8f135] ring-1 ring-[#c8f135]"
+            : "border-slate-300 dark:border-slate-700"
         }`}
       >
-        <span className={value ? "truncate" : "text-slate-400 truncate"}>
+        <span className={value ? "truncate font-medium" : "text-slate-400 truncate"}>
           {value || placeholder}
         </span>
         <ChevronDown
@@ -65,8 +81,8 @@ const CustomSelect = ({
           }`}
         />
       </div>
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-auto">
+      {isOpen && !disabled && (
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-auto">
           {options.map((opt, i) => (
             <div
               key={i}
@@ -74,10 +90,10 @@ const CustomSelect = ({
                 onChange(opt.value);
                 setIsOpen(false);
               }}
-              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 ${
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-[#c8f135]/15 hover:text-[#c8f135] ${
                 value === opt.value
-                  ? "bg-blue-50 dark:bg-slate-700 text-blue-600 font-medium"
-                  : ""
+                  ? "bg-[#c8f135]/15 text-[#c8f135] font-bold"
+                  : "text-slate-700 dark:text-slate-200"
               }`}
             >
               {opt.label}
@@ -121,6 +137,8 @@ export default function StudentModal({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOtherDept, setIsOtherDept] = useState(false);
   const [customDept, setCustomDept] = useState("");
+  const [isOtherSem, setIsOtherSem] = useState(false);
+  const [customSem, setCustomSem] = useState("");
   const [isDetectingFace, setIsDetectingFace] = useState(false);
   const [faceDetectionStatus, setFaceDetectionStatus] = useState<string | null>(null);
 
@@ -149,6 +167,18 @@ export default function StudentModal({
         setIsOtherDept(false);
         setCustomDept("");
       }
+
+      const currentDept = student.department || "";
+      const maxSem = DEPARTMENT_SEMESTERS[currentDept] || 8;
+      const validSems = Array.from({ length: maxSem }, (_, i) => `Semester ${i + 1}`);
+      if (student.year && !validSems.includes(student.year)) {
+        setIsOtherSem(true);
+        setCustomSem(student.year);
+      } else {
+        setIsOtherSem(false);
+        setCustomSem("");
+      }
+
       setPhoto(null);
       if (student.photo) {
         setPhotoPreview(`${API.defaults.baseURL}/${student.photo}`);
@@ -169,6 +199,8 @@ export default function StudentModal({
       });
       setIsOtherDept(false);
       setCustomDept("");
+      setIsOtherSem(false);
+      setCustomSem("");
       setPhoto(null);
       setPhotoPreview(null);
     }
@@ -177,6 +209,48 @@ export default function StudentModal({
   }, [open, student]);
 
   if (!open || !mounted) return null;
+
+  const handleDepartmentChange = (val: string) => {
+    if (val === "Other") {
+      setIsOtherDept(true);
+      setForm((prev) => ({ ...prev, department: "" }));
+    } else {
+      setIsOtherDept(false);
+      setCustomDept("");
+      const maxSem = DEPARTMENT_SEMESTERS[val] || 8;
+      setForm((prev) => {
+        const match = prev.year.match(/^Semester\s*(\d+)$/i);
+        const semNum = match ? parseInt(match[1], 10) : 0;
+        const newYear = semNum > maxSem ? "" : prev.year;
+        return {
+          ...prev,
+          department: val,
+          year: newYear,
+        };
+      });
+    }
+  };
+
+  const currentDept = isOtherDept ? "Other" : form.department;
+  const maxSemesters = DEPARTMENT_SEMESTERS[currentDept] || 8;
+  const semesterOptions = [
+    ...Array.from({ length: maxSemesters }, (_, i) => ({
+      label: `Semester ${i + 1}`,
+      value: `Semester ${i + 1}`,
+    })),
+    { label: "Other", value: "Other" },
+  ];
+
+  const handleSemesterChange = (val: string) => {
+    if (val === "Other") {
+      setIsOtherSem(true);
+      setForm((prev) => ({ ...prev, year: "" }));
+    } else {
+      setIsOtherSem(false);
+      setCustomSem("");
+      setForm((prev) => ({ ...prev, year: val }));
+    }
+  };
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -218,8 +292,10 @@ export default function StudentModal({
     if (!form.roll.trim()) newErrors.roll = "Student ID / Roll number is required";
 
     const finalDept = isOtherDept ? customDept.trim() : form.department;
+    const finalYear = isOtherSem ? customSem.trim() : form.year;
+
     if (!finalDept) newErrors.department = "Department is required";
-    if (!form.year.trim()) newErrors.year = "Year / Semester is required";
+    if (!finalYear) newErrors.year = "Year / Semester is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -229,6 +305,7 @@ export default function StudentModal({
     onSave({
       ...form,
       department: finalDept,
+      year: finalYear,
       ...(photo ? { photo } : {}),
     });
   };
@@ -256,7 +333,7 @@ export default function StudentModal({
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
           {/* Photo & Biometrics Section */}
           <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
-            <div className="relative h-24 w-24 shrink-0 rounded-2xl border-2 border-dashed border-blue-500 bg-white dark:bg-slate-900 overflow-hidden flex items-center justify-center shadow-inner">
+            <div className="relative h-24 w-24 shrink-0 rounded-2xl border-2 border-dashed border-[#c8f135]/50 bg-white dark:bg-slate-900 overflow-hidden flex items-center justify-center shadow-inner">
               {photoPreview ? (
                 <img
                   src={photoPreview}
@@ -310,7 +387,7 @@ export default function StudentModal({
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
               {errors.name && <p className="mt-1 text-xs text-rose-500">{errors.name}</p>}
             </div>
@@ -323,7 +400,7 @@ export default function StudentModal({
                 type="text"
                 value={form.roll}
                 onChange={(e) => setForm({ ...form, roll: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600 font-mono"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135] font-mono"
               />
               {errors.roll && <p className="mt-1 text-xs text-rose-500">{errors.roll}</p>}
             </div>
@@ -336,14 +413,7 @@ export default function StudentModal({
                   ...PREDEFINED_DEPTS.map((d) => ({ label: d, value: d })),
                   { label: "Other", value: "Other" },
                 ]}
-                onChange={(val) => {
-                  if (val === "Other") {
-                    setIsOtherDept(true);
-                  } else {
-                    setIsOtherDept(false);
-                    setForm({ ...form, department: val });
-                  }
-                }}
+                onChange={handleDepartmentChange}
                 placeholder="Select Department"
                 error={errors.department}
               />
@@ -352,22 +422,29 @@ export default function StudentModal({
                   type="text"
                   value={customDept}
                   onChange={(e) => setCustomDept(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                  className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
                 />
               )}
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Year / Semester *
-              </label>
-              <input
-                type="text"
-                value={form.year}
-                onChange={(e) => setForm({ ...form, year: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+              <CustomSelect
+                label="Year / Semester *"
+                value={isOtherSem ? "Other" : form.year}
+                options={semesterOptions}
+                onChange={handleSemesterChange}
+                placeholder={form.department || isOtherDept ? "Select Semester" : "Select Department First"}
+                disabled={!form.department && !isOtherDept}
+                error={errors.year}
               />
-              {errors.year && <p className="mt-1 text-xs text-rose-500">{errors.year}</p>}
+              {isOtherSem && (
+                <input
+                  type="text"
+                  value={customSem}
+                  onChange={(e) => setCustomSem(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
+                />
+              )}
             </div>
 
             <div>
@@ -378,7 +455,7 @@ export default function StudentModal({
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
             </div>
 
@@ -390,7 +467,7 @@ export default function StudentModal({
                 type="tel"
                 value={form.parent_phone}
                 onChange={(e) => setForm({ ...form, parent_phone: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
             </div>
 
@@ -402,7 +479,7 @@ export default function StudentModal({
                 type="text"
                 value={form.parent_name}
                 onChange={(e) => setForm({ ...form, parent_name: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
             </div>
 
@@ -414,7 +491,7 @@ export default function StudentModal({
                 type="password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-[#c8f135]"
               />
             </div>
           </div>
