@@ -308,7 +308,6 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. Shekhar Kumar"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -322,7 +321,6 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. 2101290"
                 value={form.roll}
                 onChange={(e) => setForm({ ...form, roll: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600 font-mono"
@@ -352,7 +350,6 @@ export default function StudentModal({
               {isOtherDept && (
                 <input
                   type="text"
-                  placeholder="Specify Custom Department"
                   value={customDept}
                   onChange={(e) => setCustomDept(e.target.value)}
                   className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -366,7 +363,6 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. 3rd Year / Sem 6"
                 value={form.year}
                 onChange={(e) => setForm({ ...form, year: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -380,7 +376,6 @@ export default function StudentModal({
               </label>
               <input
                 type="email"
-                placeholder="student@university.edu"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -393,7 +388,6 @@ export default function StudentModal({
               </label>
               <input
                 type="tel"
-                placeholder="+91 9876543210"
                 value={form.parent_phone}
                 onChange={(e) => setForm({ ...form, parent_phone: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -406,7 +400,6 @@ export default function StudentModal({
               </label>
               <input
                 type="text"
-                placeholder="Parent's Name"
                 value={form.parent_name}
                 onChange={(e) => setForm({ ...form, parent_name: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -419,7 +412,6 @@ export default function StudentModal({
               </label>
               <input
                 type="password"
-                placeholder={student ? "(Unchanged if blank)" : "Initial password"}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"

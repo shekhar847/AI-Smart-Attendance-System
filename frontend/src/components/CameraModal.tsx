@@ -87,7 +87,6 @@ export default function CameraModal({
             </label>
             <input
               type="text"
-              placeholder="e.g. Main Entrance Gate 1"
               value={form.camera_name}
               onChange={(e) =>
                 setForm({ ...form, camera_name: e.target.value })
@@ -103,7 +102,6 @@ export default function CameraModal({
             </label>
             <input
               type="text"
-              placeholder="rtsp://192.168.1.100:554/stream or 0"
               value={form.camera_url}
               onChange={(e) =>
                 setForm({ ...form, camera_url: e.target.value })
@@ -119,7 +117,6 @@ export default function CameraModal({
             </label>
             <input
               type="text"
-              placeholder="e.g. Block A, 2nd Floor Corridor"
               value={form.location}
               onChange={(e) =>
                 setForm({ ...form, location: e.target.value })

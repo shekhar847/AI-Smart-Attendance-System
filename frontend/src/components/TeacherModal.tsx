@@ -214,7 +214,6 @@ export default function TeacherModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. Assistant Professor"
                 value={form.designation}
                 onChange={(e) => setForm({ ...form, designation: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
@@ -230,7 +229,6 @@ export default function TeacherModal({
               </label>
               <input
                 type="password"
-                placeholder={teacher ? "(Unchanged if blank)" : "Portal Password"}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-blue-600"
