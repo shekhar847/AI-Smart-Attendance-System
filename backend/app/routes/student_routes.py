@@ -257,11 +257,10 @@ def student_attendance_history(
 # ==========================
 # BULK UPLOAD STUDENTS
 # ==========================
-import pandas as pd
-import io
-
 @router.post("/bulk-upload")
 def bulk_upload_students(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    import io
+    import pandas as pd
     if not (file.filename.endswith(".csv") or file.filename.endswith(".xlsx") or file.filename.endswith(".xls")):
         raise HTTPException(status_code=400, detail="Invalid file format. Please upload a .csv or .xlsx file")
         
