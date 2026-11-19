@@ -189,7 +189,7 @@ export default function LoginPage() {
                 }}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeRole === "admin"
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                    ? "bg-[#c8f135] text-slate-950 shadow-md shadow-[#c8f135]/25"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -204,7 +204,7 @@ export default function LoginPage() {
                 }}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeRole === "teacher"
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                    ? "bg-[#c8f135] text-slate-950 shadow-md shadow-[#c8f135]/25"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -219,7 +219,7 @@ export default function LoginPage() {
                 }}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeRole === "student"
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                    ? "bg-[#c8f135] text-slate-950 shadow-md shadow-[#c8f135]/25"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -310,7 +310,7 @@ export default function LoginPage() {
           <div className="w-full max-w-md rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#c8f135] text-slate-950 font-bold shadow-md shadow-[#c8f135]/25">
                   <KeyRound size={20} />
                 </div>
                 <div>

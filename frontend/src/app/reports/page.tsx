@@ -176,7 +176,7 @@ export default function ReportsPage() {
             </button>
             <button
               onClick={exportPDF}
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition active:scale-95"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#c8f135] px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 hover:bg-[#b5e028] transition active:scale-95"
             >
               <Download size={16} />
               Export PDF
@@ -313,7 +313,7 @@ export default function ReportsPage() {
 
               <button
                 onClick={handleFilterDateRange}
-                className="rounded-xl bg-blue-600 px-4 py-1.5 text-xs font-bold text-white shadow-md hover:bg-blue-700 transition"
+                className="rounded-xl bg-[#c8f135] px-4 py-1.5 text-xs font-bold text-slate-950 shadow-md shadow-[#c8f135]/25 hover:bg-[#b5e028] transition"
               >
                 Apply Range
               </button>

@@ -63,7 +63,7 @@ export default function FaceRecognitionModal({
         {/* Header */}
         <div className="mb-6 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/60 pb-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#c8f135] text-slate-950 font-bold shadow-lg shadow-[#c8f135]/30">
               <Scan size={22} className="animate-pulse" />
             </div>
             <div>
@@ -150,7 +150,7 @@ export default function FaceRecognitionModal({
             <button
               onClick={capture}
               disabled={loading}
-              className="w-full rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 py-3.5 font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:scale-[1.01] active:scale-95 disabled:opacity-50"
+              className="w-full rounded-2xl bg-[#c8f135] py-3.5 font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 transition hover:bg-[#b5e028] hover:scale-[1.01] active:scale-95 disabled:opacity-50"
             >
               {loading ? "Analyzing Frame..." : "Capture & Verify Face"}
             </button>

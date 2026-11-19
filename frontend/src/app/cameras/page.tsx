@@ -94,7 +94,7 @@ export default function CamerasPage() {
               setEditingCamera(null);
               setOpenModal(true);
             }}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-700 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#c8f135] px-6 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 transition hover:bg-[#b5e028] active:scale-95"
           >
             <Plus size={16} />
             Register Camera

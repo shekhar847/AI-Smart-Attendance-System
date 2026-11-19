@@ -68,10 +68,10 @@ export default function AttendanceHistoryModal({
             <img
               src={`${API.defaults.baseURL}/${student.photo}`}
               alt={student.name}
-              className="h-20 w-20 rounded-2xl border-2 border-blue-500 object-cover shadow-md"
+              className="h-20 w-20 rounded-2xl border-2 border-[#c8f135] object-cover shadow-md"
             />
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-600 text-white font-extrabold text-2xl shadow-md">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#c8f135] text-slate-950 font-black text-2xl shadow-md shadow-[#c8f135]/25">
               {student.name.charAt(0).toUpperCase()}
             </div>
           )}
@@ -158,7 +158,7 @@ export default function AttendanceHistoryModal({
         <div className="mt-6 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-md"
+            className="rounded-xl bg-[#c8f135] px-6 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-[#b5e028] shadow-md shadow-[#c8f135]/25"
           >
             Close
           </button>

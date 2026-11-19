@@ -159,7 +159,7 @@ export default function AlertSettingsPage() {
             <button
               onClick={handleTriggerNow}
               disabled={triggering}
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition active:scale-95"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#c8f135] px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 hover:bg-[#b5e028] transition active:scale-95"
             >
               <Play size={16} />
               {triggering ? "Checking Absent..." : "Trigger Alerts Now"}
@@ -461,7 +461,7 @@ export default function AlertSettingsPage() {
                     type="button"
                     onClick={handleSendTest}
                     disabled={testLoading}
-                    className="rounded-xl bg-blue-600 px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-blue-700 transition"
+                    className="rounded-xl bg-[#c8f135] px-5 py-2 text-xs font-bold text-slate-950 shadow-md shadow-[#c8f135]/25 hover:bg-[#b5e028] transition"
                   >
                     {testLoading ? "Dispatching..." : "Send Test Now"}
                   </button>

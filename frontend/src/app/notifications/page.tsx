@@ -132,7 +132,7 @@ export default function NotificationsPage() {
               <button
                 onClick={markAllRead}
                 disabled={markingAll}
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#c8f135] px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 hover:bg-[#b5e028] transition"
               >
                 <CheckCheck size={16} />
                 Mark All Read

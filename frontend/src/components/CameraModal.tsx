@@ -65,7 +65,7 @@ export default function CameraModal({
       <div className="w-full max-w-md rounded-3xl glass-card border border-white/40 dark:border-slate-800 p-6 md:p-7 shadow-2xl animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200/60 dark:border-slate-800/60">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/25">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#c8f135] text-slate-950 font-bold shadow-md shadow-[#c8f135]/25">
               <CameraIcon size={20} />
             </div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
@@ -158,7 +158,7 @@ export default function CameraModal({
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-700"
+              className="rounded-xl bg-[#c8f135] px-6 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 transition hover:bg-[#b5e028] active:scale-95"
             >
               Save Camera
             </button>

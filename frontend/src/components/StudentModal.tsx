@@ -269,7 +269,7 @@ export default function StudentModal({
             </div>
 
             <div className="flex-1 space-y-2 text-center sm:text-left">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-blue-700 transition">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c8f135] px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-[#c8f135]/25 hover:bg-[#b5e028] transition">
                 <Upload size={14} />
                 <span>Upload Face Photo</span>
                 <input
@@ -437,7 +437,7 @@ export default function StudentModal({
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-700"
+              className="rounded-xl bg-[#c8f135] px-6 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-[#c8f135]/25 transition hover:bg-[#b5e028] active:scale-95"
             >
               {student ? "Update Student" : "Complete Registration"}
             </button>

@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         placeholder={placeholder}
         className={`w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 ${
           Icon ? "pl-12" : "pl-4"
-        } pr-4 text-slate-700 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-200 focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/40 ${className}`}
+        } pr-4 text-slate-700 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-200 focus:border-[#c8f135] focus:ring-4 focus:ring-[#c8f135]/20 ${className}`}
         {...props}
       />
     </div>
