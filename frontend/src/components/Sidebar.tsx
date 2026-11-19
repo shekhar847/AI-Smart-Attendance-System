@@ -47,12 +47,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       return [
         {
           title: "My Attendance",
-          icon: <UserCheck size={19} />,
+          icon: <UserCheck size={18} />,
           to: "/student-portal",
         },
         {
           title: "Parent Alerts",
-          icon: <BellRing size={19} />,
+          icon: <BellRing size={18} />,
           to: "/student-portal?tab=alerts",
         },
       ];
@@ -62,22 +62,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       return [
         {
           title: "Dashboard",
-          icon: <LayoutDashboard size={19} />,
+          icon: <LayoutDashboard size={18} />,
           to: "/dashboard",
         },
         {
           title: "Students",
-          icon: <Users size={19} />,
+          icon: <Users size={18} />,
           to: "/students",
         },
         {
           title: "Attendance",
-          icon: <Camera size={19} />,
+          icon: <Camera size={18} />,
           to: "/attendance",
         },
         {
           title: "Reports",
-          icon: <BarChart3 size={19} />,
+          icon: <BarChart3 size={18} />,
           to: "/reports",
         },
       ];
@@ -87,42 +87,42 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     return [
       {
         title: "Dashboard",
-        icon: <LayoutDashboard size={19} />,
+        icon: <LayoutDashboard size={18} />,
         to: "/dashboard",
       },
       {
         title: "Students",
-        icon: <Users size={19} />,
+        icon: <Users size={18} />,
         to: "/students",
       },
       {
         title: "Teachers",
-        icon: <GraduationCap size={19} />,
+        icon: <GraduationCap size={18} />,
         to: "/teachers",
       },
       {
         title: "Attendance",
-        icon: <Camera size={19} />,
+        icon: <Camera size={18} />,
         to: "/attendance",
       },
       {
         title: "Surveillance",
-        icon: <Video size={19} />,
+        icon: <Video size={18} />,
         to: "/cameras",
       },
       {
         title: "Reports",
-        icon: <BarChart3 size={19} />,
+        icon: <BarChart3 size={18} />,
         to: "/reports",
       },
       {
         title: "Parent Alerts",
-        icon: <BellRing size={19} />,
+        icon: <BellRing size={18} />,
         to: "/alert-settings",
       },
       {
         title: "Settings",
-        icon: <Settings size={19} />,
+        icon: <Settings size={18} />,
         to: "/settings",
       },
     ];
@@ -141,61 +141,61 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed top-0 bottom-0 left-0 z-50 flex w-72 flex-col justify-between border-r border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-2xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      className={`fixed top-0 bottom-0 left-0 z-50 flex w-72 flex-col h-screen border-r border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-2xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div>
-        {/* Header / Brand */}
-        <div className="flex h-20 items-center justify-between px-6 border-b border-slate-200/60 dark:border-slate-800/60">
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white font-extrabold text-xl shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-200">
-              AI
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-              </span>
-            </div>
-            <div>
-              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-                SmartAttend
-                <span className="rounded-full bg-blue-500/10 dark:bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-cyan-400 border border-blue-500/20 dark:border-cyan-500/20">
-                  v2.4
-                </span>
-              </h2>
-              <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 tracking-wide">
-                FACIAL TELEMETRY
-              </p>
-            </div>
-          </Link>
-
-          <button
-            onClick={onClose}
-            className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* User Role Tag */}
-        <div className="mx-4 mt-4 mb-2 px-3 py-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              {role} Account
+      {/* Header / Brand (Fixed Top) */}
+      <div className="shrink-0 flex h-16 items-center justify-between px-5 border-b border-slate-200/60 dark:border-slate-800/60">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white font-extrabold text-lg shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-200">
+            AI
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
             </span>
           </div>
-          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate max-w-[100px]">
-            {user?.name || "Verified"}
+          <div>
+            <h2 className="text-base font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+              SmartAttend
+              <span className="rounded-full bg-blue-500/10 dark:bg-cyan-500/10 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 dark:text-cyan-400 border border-blue-500/20 dark:border-cyan-500/20">
+                v2.4
+              </span>
+            </h2>
+            <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wide">
+              FACIAL TELEMETRY
+            </p>
+          </div>
+        </Link>
+
+        <button
+          onClick={onClose}
+          className="rounded-xl p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* User Role Tag (Compact) */}
+      <div className="shrink-0 mx-3.5 mt-2.5 mb-1 px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            {role} Account
           </span>
         </div>
+        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate max-w-[100px]">
+          {user?.name || "Verified"}
+        </span>
+      </div>
 
-        {/* Navigation Items */}
-        <nav className="space-y-1.5 px-4 py-3">
-          <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-300">
-            System Modules
-          </p>
+      {/* Scrollable Navigation Items */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-3 py-1.5">
+        <p className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+          System Modules
+        </p>
 
+        <nav className="space-y-1">
           {menuItems.map((item, index) => {
             const isActive = pathname === item.to || pathname.startsWith(item.to + "/");
             return (
@@ -203,7 +203,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 key={index}
                 href={item.to}
                 onClick={onClose}
-                className={`group flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+                className={`group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                   isActive
                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100"
@@ -216,7 +216,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 >
                   {item.icon}
                 </span>
-                <span className="flex-1">{item.title}</span>
+                <span className="flex-1 text-[13px]">{item.title}</span>
                 {isActive && (
                   <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
                 )}
@@ -226,25 +226,25 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
       </div>
 
-      {/* Footer Area with System Status & Logout */}
-      <div className="p-4 border-t border-slate-200/60 dark:border-slate-800/60 space-y-3">
-        <div className="rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-cyan-500/10 p-3.5 border border-indigo-500/20 dark:border-indigo-500/20">
-          <div className="flex items-center gap-2 mb-1.5">
-            <Sparkles size={14} className="text-cyan-500 animate-spin" />
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-cyan-400">
+      {/* Footer Area with System Status & Logout (Pinned to Bottom, Always Visible) */}
+      <div className="shrink-0 p-3.5 border-t border-slate-200/60 dark:border-slate-800/60 space-y-2 bg-slate-50/50 dark:bg-[#0b0f19]/80">
+        <div className="rounded-xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-cyan-500/10 p-2.5 border border-indigo-500/20 dark:border-indigo-500/20">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles size={13} className="text-cyan-500 animate-spin" />
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-cyan-400">
               AI Core Status
             </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
-            Biometric Neural Engine is Online. Latency: 18ms
+          <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-tight">
+            Biometric Neural Engine Online. Latency: 18ms
           </p>
         </div>
 
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors duration-200"
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors duration-200"
         >
-          <LogOut size={18} />
+          <LogOut size={16} />
           <span>Sign Out</span>
         </button>
       </div>
