@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content Area */}
       <div className="relative z-10 flex min-h-screen flex-1 flex-col lg:ml-72 transition-all duration-300 min-w-0">
         {/* Sticky Header Topbar */}
-        <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-[#0b0f19]/85 backdrop-blur-xl transition-all duration-300 shadow-sm">
+        <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0b0f19] transition-all duration-300 shadow-sm">
           <Topbar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
         </header>
 

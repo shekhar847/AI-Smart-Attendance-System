@@ -186,7 +186,10 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
           </button>
 
           {openNotifications && (
-            <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl bg-white dark:bg-[#0e1422] border border-slate-200 dark:border-slate-700/80 p-4 shadow-2xl shadow-black/50 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div
+              style={{ backgroundColor: darkMode ? "#0b0f19" : "#ffffff", opacity: 1 }}
+              className="dropdown-opaque-box absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-2xl shadow-black/80 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+            >
               <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
                   <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
@@ -263,7 +266,10 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
           </button>
 
           {openMenu && (
-            <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-white dark:bg-[#0e1422] border border-slate-200 dark:border-slate-700/80 p-2 shadow-2xl shadow-black/50 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div
+              style={{ backgroundColor: darkMode ? "#0b0f19" : "#ffffff", opacity: 1 }}
+              className="dropdown-opaque-box absolute right-0 mt-3 w-56 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-2 shadow-2xl shadow-black/80 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+            >
               <div className="px-3 py-2 border-b border-slate-200/60 dark:border-slate-800/60">
                 <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                   {admin?.name || "Administrator"}
@@ -310,7 +316,10 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
       {showProfileModal && mounted && (
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-            <div className="w-full max-w-md rounded-3xl bg-white dark:bg-[#0e1422] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div
+              style={{ backgroundColor: darkMode ? "#0b0f19" : "#ffffff", opacity: 1 }}
+              className="dropdown-opaque-box w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200"
+            >
               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#c8f135] text-slate-950 font-bold shadow-lg shadow-[#c8f135]/25">
