@@ -132,6 +132,8 @@ origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://ai-smart-attendance-system-red.vercel.app",
     "https://ai-smart-attendance-system-iota.vercel.app",
 ]
 
@@ -142,6 +144,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_private_network=True,
 )
 
 @app.middleware("http")
