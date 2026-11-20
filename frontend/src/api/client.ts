@@ -2,6 +2,10 @@ import axios, { AxiosInstance } from "axios";
 
 export const getBaseURL = (): string => {
   if (typeof window !== "undefined") {
+    const customUrl = localStorage.getItem("backend_api_url");
+    if (customUrl && customUrl.trim()) {
+      return customUrl.trim().replace(/\/+$/, "");
+    }
     return (
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       (window as any).__ENV?.API_BASE_URL ||
@@ -19,6 +23,11 @@ const API: AxiosInstance = axios.create({
 API.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
+      const customUrl = localStorage.getItem("backend_api_url");
+      if (customUrl && customUrl.trim()) {
+        config.baseURL = customUrl.trim().replace(/\/+$/, "");
+      }
+
       const token =
         localStorage.getItem("token") ||
         localStorage.getItem("access_token");

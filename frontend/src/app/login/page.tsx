@@ -12,8 +12,11 @@ import {
   Shield,
   GraduationCap,
   UserCheck,
+  Server,
+  Settings,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getBaseURL } from "../../api/client";
 import {
   loginAdmin,
   loginTeacher,
@@ -67,6 +70,58 @@ export default function LoginPage() {
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState("");
   const [modalSuccess, setModalSuccess] = useState("");
+
+  // Backend Server Config Modal state
+  const [showServerModal, setShowServerModal] = useState(false);
+  const [serverUrl, setServerUrl] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("backend_api_url") || getBaseURL();
+    }
+    return "http://localhost:8000";
+  });
+  const [serverTestStatus, setServerTestStatus] = useState<string | null>(null);
+  const [serverTestLoading, setServerTestLoading] = useState(false);
+
+  const handleTestAndSaveServer = async () => {
+    const cleanUrl = serverUrl.trim().replace(/\/+$/, "");
+    if (!cleanUrl) return;
+    setServerTestLoading(true);
+    setServerTestStatus(null);
+    try {
+      localStorage.setItem("backend_api_url", cleanUrl);
+      const res = await fetch(`${cleanUrl}/docs`, { mode: "cors" });
+      if (res.status === 200 || res.status === 404 || res.status === 307) {
+        setServerTestStatus("Connected successfully! ✓");
+        setError("");
+        setTimeout(() => {
+          setShowServerModal(false);
+          window.location.reload();
+        }, 1200);
+      } else {
+        setServerTestStatus("Saved (Server responded with status " + res.status + ")");
+      }
+    } catch (err: any) {
+      localStorage.setItem("backend_api_url", cleanUrl);
+      setServerTestStatus("URL saved successfully! Reloading...");
+      setTimeout(() => {
+        setShowServerModal(false);
+        window.location.reload();
+      }, 1200);
+    } finally {
+      setServerTestLoading(false);
+    }
+  };
+
+  const handleResetServerUrl = () => {
+    localStorage.removeItem("backend_api_url");
+    const defaultUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+    setServerUrl(defaultUrl);
+    setServerTestStatus("Reset to default URL: " + defaultUrl);
+    setTimeout(() => {
+      setShowServerModal(false);
+      window.location.reload();
+    }, 1000);
+  };
 
   const handleLogin = async () => {
     const cleanId = identifier.trim();
@@ -229,7 +284,19 @@ export default function LoginPage() {
 
             {error && (
               <div className="mb-4 rounded-xl bg-rose-500/10 border border-rose-500/20 p-3 text-xs font-semibold text-rose-600 dark:text-rose-400">
-                {error}
+                <p>{error}</p>
+                {(error.includes("backend") || error.includes("Network")) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowServerModal(true);
+                      setServerTestStatus(null);
+                    }}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[#c8f135] underline hover:opacity-80"
+                  >
+                    <Server size={14} /> Configure Backend Server URL
+                  </button>
+                )}
               </div>
             )}
 
@@ -300,6 +367,23 @@ export default function LoginPage() {
                 {loading ? "Authenticating..." : "Sign In to Dashboard"}
               </Button>
             </form>
+
+            {/* Server Settings Footer Pill */}
+            <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+              <span className="truncate max-w-[200px]" title={serverUrl}>
+                API: <strong className="text-slate-700 dark:text-slate-300 font-mono">{serverUrl}</strong>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowServerModal(true);
+                  setServerTestStatus(null);
+                }}
+                className="inline-flex items-center gap-1.5 text-slate-500 hover:text-[#c8f135] transition-colors font-medium cursor-pointer"
+              >
+                <Settings size={12} /> Server Settings
+              </button>
+            </div>
           </Card>
         </div>
       </div>
@@ -407,6 +491,88 @@ export default function LoginPage() {
                 </Button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Backend Server URL Modal */}
+      {showServerModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-3xl bg-white dark:bg-[#0e1422] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#c8f135] text-slate-950 font-bold shadow-md shadow-[#c8f135]/25">
+                  <Server size={20} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                    Server API Settings
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Connect mobile, tablet, or remote server
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowServerModal(false)}
+                className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="mt-5 space-y-4">
+              <div className="rounded-xl bg-slate-100/70 dark:bg-slate-800/50 p-3.5 border border-slate-200/50 dark:border-slate-700/50 text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-1.5">
+                <p>
+                  📱 <strong>Mobile Note:</strong> On a mobile phone, <code className="text-[#c8f135] font-mono">localhost</code> refers to your phone itself, not your laptop!
+                </p>
+                <p>
+                  To connect from your phone, enter your <strong>Ngrok URL</strong> (e.g. <span className="font-mono text-[#c8f135]">https://xxx.ngrok-free.app</span>) or <strong>Render backend URL</strong> below:
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Backend API Base URL
+                </label>
+                <Input
+                  type="text"
+                  placeholder="https://your-backend.onrender.com or https://xxx.ngrok-free.app"
+                  value={serverUrl}
+                  onChange={(e) => setServerUrl(e.target.value)}
+                  icon={Server}
+                />
+              </div>
+
+              {serverTestStatus && (
+                <div
+                  className={`p-3 rounded-xl text-xs font-semibold ${
+                    serverTestStatus.includes("successfully")
+                      ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                  }`}
+                >
+                  {serverTestStatus}
+                </div>
+              )}
+
+              <div className="flex gap-2.5 pt-2">
+                <Button
+                  onClick={handleTestAndSaveServer}
+                  disabled={serverTestLoading || !serverUrl.trim()}
+                  className="flex-1"
+                >
+                  {serverTestLoading ? "Testing..." : "Save & Reconnect"}
+                </Button>
+                <button
+                  type="button"
+                  onClick={handleResetServerUrl}
+                  className="px-4 py-3 text-xs font-bold rounded-xl border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  Reset Default
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
