@@ -1,21 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone, timedelta, time
 import os
 import shutil
+import random
 
 from app.config.database import get_db
-
 from app.models.attendance_model import Attendance
 from app.models.student_model import Student
-
+from app.models.unauthorized_entry_model import UnauthorizedEntry
 from app.schemas.attendance_schema import Attendance as AttendanceSchema
-
 from app.services.face_recognition_service import recognize_face
 from app.utils.geo_utils import haversine
-from app.models.unauthorized_entry_model import UnauthorizedEntry
-from fastapi import Form
-import random
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 # Mock classroom coordinates (e.g., center of the institute)
 CLASSROOM_LAT = 28.6139 
@@ -126,10 +124,7 @@ def recognize_student(
             if dist <= ALLOWED_RADIUS_METERS:
                 is_verified = 1
 
-        from datetime import datetime, timezone, timedelta, time
-        IST = timezone(timedelta(hours=5, minutes=30))
         now_ist = datetime.now(IST)
-
         today = now_ist.date()
         now_time = now_ist.time()
 

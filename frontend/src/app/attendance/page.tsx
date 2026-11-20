@@ -27,6 +27,7 @@ export default function AttendancePage() {
   const isRecognizingRef = useRef(false);
   const detectingRef = useRef(false);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const faceapiRef = useRef<any>(null);
 
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [studentData, setStudentData] = useState<Student | null>(null);
@@ -39,6 +40,7 @@ export default function AttendancePage() {
   const loadModels = async () => {
     try {
       const faceapi = await import("face-api.js");
+      faceapiRef.current = faceapi;
       const MODEL_URL = "/models";
 
       await Promise.all([
@@ -62,7 +64,9 @@ export default function AttendancePage() {
     if (video.readyState !== 4) return;
 
     try {
-      const faceapi = await import("face-api.js");
+      const faceapi = faceapiRef.current;
+      if (!faceapi) return;
+
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()

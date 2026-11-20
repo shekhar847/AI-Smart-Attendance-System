@@ -1,17 +1,14 @@
-from fastapi import UploadFile, File
-import shutil
 import os
-import json
-from app.services.face_recognition_service import generate_face_encoding
-
-from fastapi import APIRouter, Depends, HTTPException
+import shutil
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db
 from app.models.student_model import Student
-from app.schemas.student_schema import Student as StudentSchema
 from app.models.attendance_model import Attendance
-
+from app.schemas.student_schema import Student as StudentSchema
+from app.services.auth_service import hash_password
+from app.services.face_recognition_service import generate_face_encoding
 
 router = APIRouter(
     prefix="/students",
@@ -30,8 +27,6 @@ def get_students(db: Session = Depends(get_db)):
 # ==========================
 # ADD STUDENT
 # ==========================
-from app.services.auth_service import hash_password
-
 @router.post("/")
 def add_student(student: StudentSchema, db: Session = Depends(get_db)):
 

@@ -77,7 +77,7 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       return getBaseURL();
     }
-    return "https://f4775e4a32b0dff5-152-59-86-176.serveousercontent.com";
+    return "https://removing-gore-quarters-suits.trycloudflare.com";
   });
   const [serverTestStatus, setServerTestStatus] = useState<string | null>(null);
   const [serverTestLoading, setServerTestLoading] = useState(false);
@@ -86,14 +86,14 @@ export default function LoginPage() {
     const cleanUrl = serverUrl.trim().replace(/\/+$/, "");
     if (!cleanUrl) return;
     if (cleanUrl.includes("vercel.app")) {
-      setServerTestStatus("⚠️ Error: Yeh Vercel Frontend link hai! Backend link alag hota hai (e.g. https://...app.lhr.life ya Render link).");
+      setServerTestStatus("⚠️ Error: Yeh Vercel Frontend link hai! Backend link alag hota hai (e.g. https://...trycloudflare.com ya Render link).");
       return;
     }
     setServerTestLoading(true);
     setServerTestStatus(null);
     try {
       localStorage.setItem("backend_api_url", cleanUrl);
-      const res = await fetch(`${cleanUrl}/docs`, { mode: "cors" });
+      const res = await fetch(`${cleanUrl}/health`, { mode: "cors" });
       if (res.status === 200 || res.status === 404 || res.status === 307) {
         setServerTestStatus("Connected successfully! ✓");
         setError("");
@@ -118,7 +118,10 @@ export default function LoginPage() {
 
   const handleResetServerUrl = () => {
     localStorage.removeItem("backend_api_url");
-    const defaultUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+    const isRemote = typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1";
+    const defaultUrl = isRemote
+      ? (process.env.NEXT_PUBLIC_API_BASE_URL || "https://removing-gore-quarters-suits.trycloudflare.com")
+      : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000");
     setServerUrl(defaultUrl);
     setServerTestStatus("Reset to default URL: " + defaultUrl);
     setTimeout(() => {
@@ -541,11 +544,18 @@ export default function LoginPage() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="https://your-backend.onrender.com or https://xxx.ngrok-free.app"
+                  placeholder="https://your-backend.onrender.com or https://xxx.trycloudflare.com"
                   value={serverUrl}
                   onChange={(e) => setServerUrl(e.target.value)}
                   icon={Server}
                 />
+                <button
+                  type="button"
+                  onClick={() => setServerUrl("https://removing-gore-quarters-suits.trycloudflare.com")}
+                  className="mt-2 text-[11px] font-semibold text-[#c8f135] underline hover:opacity-80 block text-right"
+                >
+                  ⚡ Auto-Fill Live Cloud URL
+                </button>
               </div>
 
               {serverTestStatus && (
