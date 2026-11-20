@@ -4,7 +4,13 @@ export const getBaseURL = (): string => {
   if (typeof window !== "undefined") {
     const customUrl = localStorage.getItem("backend_api_url");
     if (customUrl && customUrl.trim()) {
-      return customUrl.trim().replace(/\/+$/, "");
+      const trimmed = customUrl.trim().replace(/\/+$/, "");
+      // Prevent user from mistakenly pointing to Vercel frontend as backend API
+      if (trimmed.includes("vercel.app")) {
+        localStorage.removeItem("backend_api_url");
+      } else {
+        return trimmed;
+      }
     }
     return (
       process.env.NEXT_PUBLIC_API_BASE_URL ||
@@ -25,7 +31,10 @@ API.interceptors.request.use(
     if (typeof window !== "undefined") {
       const customUrl = localStorage.getItem("backend_api_url");
       if (customUrl && customUrl.trim()) {
-        config.baseURL = customUrl.trim().replace(/\/+$/, "");
+        const trimmed = customUrl.trim().replace(/\/+$/, "");
+        if (!trimmed.includes("vercel.app")) {
+          config.baseURL = trimmed;
+        }
       }
 
       const token =
