@@ -77,9 +77,9 @@ def generate_face_encoding(image_path):
             return None
 
 
-def recognize_face(image_path, students):
+def recognize_face(image_path, students, tolerance: float = 0.6):
     """
-    Recognize a face using the AI microservice.
+    Recognize a face using the AI microservice or local engine.
 
     students:
         SQLAlchemy Student objects containing:
@@ -89,7 +89,7 @@ def recognize_face(image_path, students):
     if not check_ai_service_online():
         try:
             from app.services.face_service import recognize_face as local_recognize_face
-            return local_recognize_face(image_path, students)
+            return local_recognize_face(image_path, students, tolerance=tolerance)
         except Exception as fallback_err:
             print("Local fallback face recognition error:", fallback_err)
             return None

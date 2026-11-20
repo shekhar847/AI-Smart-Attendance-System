@@ -172,16 +172,14 @@ export default function AttendancePage() {
 
       setStudentData(student);
 
-      if (res.data.message === "Attendance already marked") {
+      if (res.data.message && res.data.message.toLowerCase().includes("already marked")) {
         setResult("Already Marked Today");
         speak(`Attendance already marked for ${student.name}`);
         clearResult(4000);
       } else {
-        setResult(`Attendance Marked - Emotion: ${res.data.emotion_status || "Neutral"}`);
+        setResult(`Attendance Marked: ${student.name}`);
         speak(
-          `Attendance marked successfully for ${student.name}. You are feeling ${
-            res.data.emotion_status || "Neutral"
-          }.`
+          `Attendance marked successfully for ${student.name}.`
         );
         clearResult(4000);
       }
