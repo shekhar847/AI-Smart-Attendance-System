@@ -85,6 +85,10 @@ export default function LoginPage() {
   const handleTestAndSaveServer = async () => {
     const cleanUrl = serverUrl.trim().replace(/\/+$/, "");
     if (!cleanUrl) return;
+    if (cleanUrl.includes("vercel.app")) {
+      setServerTestStatus("⚠️ Error: Yeh Vercel Frontend link hai! Backend link alag hota hai (e.g. https://...app.lhr.life ya Render link).");
+      return;
+    }
     setServerTestLoading(true);
     setServerTestStatus(null);
     try {
