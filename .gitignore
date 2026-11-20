@@ -35,4 +35,8 @@ frontend/.next/
 frontend/out/
 .vercel
 
+# Binaries
+ngrok.exe
+cloudflared.exe
+
 frontend-vite-backup/
