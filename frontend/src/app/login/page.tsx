@@ -75,9 +75,9 @@ export default function LoginPage() {
   const [showServerModal, setShowServerModal] = useState(false);
   const [serverUrl, setServerUrl] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("backend_api_url") || getBaseURL();
+      return getBaseURL();
     }
-    return "http://localhost:8000";
+    return "https://f4775e4a32b0dff5-152-59-86-176.serveousercontent.com";
   });
   const [serverTestStatus, setServerTestStatus] = useState<string | null>(null);
   const [serverTestLoading, setServerTestLoading] = useState(false);

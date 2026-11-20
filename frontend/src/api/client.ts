@@ -1,24 +1,34 @@
 import axios, { AxiosInstance } from "axios";
 
 export const getBaseURL = (): string => {
+  const defaultPublicUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "https://f4775e4a32b0dff5-152-59-86-176.serveousercontent.com";
+
   if (typeof window !== "undefined") {
+    const isRemote =
+      window.location.hostname !== "localhost" &&
+      window.location.hostname !== "127.0.0.1";
     const customUrl = localStorage.getItem("backend_api_url");
+
     if (customUrl && customUrl.trim()) {
       const trimmed = customUrl.trim().replace(/\/+$/, "");
-      // Prevent user from mistakenly pointing to Vercel frontend as backend API
+      // If accessing remotely (e.g. mobile on Vercel) and localhost or vercel.app is saved, purge it!
+      if (isRemote && (trimmed.includes("localhost") || trimmed.includes("vercel.app"))) {
+        localStorage.removeItem("backend_api_url");
+        return defaultPublicUrl;
+      }
       if (trimmed.includes("vercel.app")) {
         localStorage.removeItem("backend_api_url");
       } else {
         return trimmed;
       }
     }
-    return (
-      process.env.NEXT_PUBLIC_API_BASE_URL ||
-      (window as any).__ENV?.API_BASE_URL ||
-      "http://localhost:8000"
-    );
+    return isRemote
+      ? defaultPublicUrl
+      : process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
   }
-  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+  return defaultPublicUrl;
 };
 
 const API: AxiosInstance = axios.create({
@@ -29,12 +39,23 @@ const API: AxiosInstance = axios.create({
 API.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
+      const isRemote =
+        window.location.hostname !== "localhost" &&
+        window.location.hostname !== "127.0.0.1";
+      const defaultPublicUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        "https://f4775e4a32b0dff5-152-59-86-176.serveousercontent.com";
+
       const customUrl = localStorage.getItem("backend_api_url");
       if (customUrl && customUrl.trim()) {
         const trimmed = customUrl.trim().replace(/\/+$/, "");
-        if (!trimmed.includes("vercel.app")) {
+        if (isRemote && (trimmed.includes("localhost") || trimmed.includes("vercel.app"))) {
+          config.baseURL = defaultPublicUrl;
+        } else if (!trimmed.includes("vercel.app")) {
           config.baseURL = trimmed;
         }
+      } else if (isRemote) {
+        config.baseURL = defaultPublicUrl;
       }
 
       const token =
